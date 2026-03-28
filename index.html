@@ -381,64 +381,33 @@ textarea{resize:vertical;min-height:65px}
       <div class="card-head"><h2>🤖 SeanBot Admin</h2><span class="pill pr">Commissioner Only</span></div>
       <div class="card-body">
         <div class="alert-box" id="admin-alert"></div>
-        <div style="background:var(--parch2);border:1px solid var(--border);border-left:3px solid var(--gold);padding:10px 12px;margin-bottom:14px;font-size:12px;font-style:italic;color:var(--ink2);font-family:var(--fb)">
-          SeanBot auto-syncs every night after the last MLB game goes Final. Use manual override only if stats look wrong.
-        </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
           <input type="password" id="admin-secret" placeholder="Admin password..." style="width:200px"/>
-          <button class="btn btn-r" onclick="triggerSync()">⟳ Force Sync Now</button>
         </div>
 
-        <!-- HISTORICAL MANUAL ENTRY — Mar 25-28 -->
-        <div style="font-family:var(--fo);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;padding-top:4px">
-          Historical Manual Entry <span style="color:var(--red2);font-size:9px;text-transform:none;font-weight:400;letter-spacing:0">— Mar 25–28 (no lineup data available)</span>
-        </div>
-        <div style="background:rgba(139,26,26,.07);border:1px solid rgba(139,26,26,.2);border-left:3px solid var(--red);padding:9px 12px;margin-bottom:10px;font-size:11px;color:var(--ink2);font-family:var(--fb);font-style:italic">
-          Fantrax does not provide historical lineup data for past scoring days. Enter each team's official started-only RBI total per date. Stored as <strong>MANUAL</strong> and included in the monthly leaderboard.
+        <div style="font-family:var(--fo);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Update 2026 Standings</div>
+        <div style="background:var(--parch2);border:1px solid var(--border);border-left:3px solid var(--gold);padding:9px 12px;margin-bottom:12px;font-size:11px;color:var(--ink2);font-family:var(--fb);font-style:italic">
+          Enter each team's RBI total for the day. Each save <strong>adds</strong> to the running monthly total — nothing is overwritten.
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;align-items:flex-end">
           <div>
-            <div style="font-family:var(--fo);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Date</div>
-            <select id="manual-date" style="width:180px">
-              <option value="2026-03-25">March 25, 2026</option>
-              <option value="2026-03-26">March 26, 2026</option>
-              <option value="2026-03-27">March 27, 2026</option>
-              <option value="2026-03-28">March 28, 2026</option>
-            </select>
-          </div>
-          <div>
-            <div style="font-family:var(--fo);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Stat</div>
-            <select id="manual-stat" style="width:160px">
+            <div style="font-family:var(--fo);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Category</div>
+            <select id="entry-stat" style="width:200px">
               <option value="rbi">RBI (Mar/Apr)</option>
-              <option value="k">Strikeouts (May)</option>
-              <option value="h">Hits (June)</option>
-              <option value="sb">Stolen Bases (July)</option>
-              <option value="hr">Home Runs (Aug)</option>
+              <option value="strikeouts">Strikeouts (May)</option>
+              <option value="hits">Hits (June)</option>
+              <option value="stolen_bases">Stolen Bases (July)</option>
+              <option value="home_runs">Home Runs (Aug)</option>
             </select>
           </div>
-          <button class="btn" onclick="loadManualGrid()" style="background:var(--green);color:var(--parch);border-color:var(--green2)">Load Teams</button>
         </div>
-        <div class="adm-grid" id="manual-grid"></div>
-        <div class="btn-row" id="manual-save-row" style="display:none">
-          <button class="btn btn-r" onclick="saveManualEntries()">💾 Save Manual Entries</button>
+        <div class="adm-grid" id="entry-grid"></div>
+        <div class="btn-row">
+          <button class="btn btn-r" onclick="saveStandings()">💾 Add to Monthly Total</button>
+          <button class="btn" onclick="loadEntryGrid()" style="background:var(--green);color:var(--parch);border-color:var(--green2)">Refresh</button>
         </div>
-        <div id="manual-status" style="font-size:11px;color:var(--muted);font-family:var(--fb);font-style:italic;margin-bottom:4px"></div>
+        <div id="entry-status" style="font-size:12px;font-family:var(--fb);font-style:italic;color:var(--muted)"></div>
 
-        <!-- REGULAR STAT OVERRIDE -->
-        <div style="font-family:var(--fo);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px;border-top:1px solid var(--border2);padding-top:14px">Manual Stat Override</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
-          <select id="admin-cat" style="width:220px" onchange="renderAdminGrid()">
-            <option value="rbi">RBI (Mar/Apr)</option>
-            <option value="strikeouts">Strikeouts (May)</option>
-            <option value="hits">Hits (June)</option>
-            <option value="stolen_bases">Stolen Bases (July)</option>
-            <option value="home_runs">Home Runs (Aug)</option>
-          </select>
-        </div>
-        <div class="adm-grid" id="admin-grid"><div class="loading">Loading...</div></div>
-        <div class="btn-row"><button class="btn btn-r" onclick="saveManualStats()">Save Overrides</button></div>
-
-        <!-- SEPTEMBER -->
         <div style="font-family:var(--fo);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px;border-top:1px solid var(--border2);padding-top:14px">September Single-Day Score</div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px">
           <select id="sept-team" style="width:220px">
@@ -500,7 +469,13 @@ const TEAMS=['Possibilities',"Yoshi's Islanders",'thebigfur','Red Birds','Daddy 
 
 let catIdx=0,sortAsc=false,teamData=[],playerData={rbi:[],k:[],h:[],sb:[],hr:[]},mlbScores=[],mlbNews=[],chirpData=[];
 
-function checkAdmin(){if(window.location.search.includes('admin')){document.getElementById('admin-wrap').classList.add('visible');renderAdminGrid();}}
+function checkAdmin(){
+  if(window.location.search.includes('admin')){
+    document.getElementById('admin-wrap').classList.add('visible'); loadEntryGrid();
+    // Set default date to today
+    document.getElementById('entry-date').value = new Date().toISOString().slice(0,10);
+  }
+}
 
 function showQuote(){
   const q=QUOTES[Math.floor(Math.random()*QUOTES.length)];
@@ -690,117 +665,55 @@ function renderChirpList(){
   });
 }
 
-// ── MANUAL HISTORICAL ENTRY ───────────────────────────────────────────────────
-async function loadManualGrid() {
-  const date_str = document.getElementById('manual-date').value;
-  const stat = document.getElementById('manual-stat').value;
-  const el = document.getElementById('manual-grid');
-  const saveRow = document.getElementById('manual-save-row');
-  el.innerHTML = '<div class="loading">Loading...</div>';
-  saveRow.style.display = 'none';
-
-  // Load any existing manual entries for this date/stat
-  let existing = {};
-  try {
-    const r = await fetch(`${API}/api/manual-entries?month=${date_str.slice(0,7)}`);
-    const j = await r.json();
-    (j.entries || []).forEach(e => {
-      if (e.score_date === date_str && e.stat_type === stat) {
-        existing[e.fantasy_team] = e.value;
-      }
-    });
-  } catch {}
-
+// ── STANDINGS ENTRY ───────────────────────────────────────────────────────────
+function loadEntryGrid() {
+  const stat = document.getElementById('entry-stat').value;
+  const el = document.getElementById('entry-grid');
   el.innerHTML = '';
   TEAMS.forEach(name => {
-    const cur = existing[name] !== undefined ? existing[name] : '';
-    const saved = cur !== '';
+    const td  = teamData.find(t => t.team_name === name) || {};
+    const cur = Math.round(td[stat] || 0);
     const d = document.createElement('div');
     d.className = 'adm-item';
-    d.innerHTML = `
-      <span class="an">${esc(name)}</span>
-      <span class="ac" style="${saved ? 'color:var(--green3);font-weight:700' : ''}">${saved ? '✓ saved: '+cur : 'not set'}</span>
-      <input type="number" min="0" placeholder="RBI total"
-        data-team="${esc(name)}" value="${saved ? cur : ''}" style="width:90px"/>
-    `;
+    d.innerHTML = `<span class="an">${esc(name)}</span><span class="ac">current: <strong>${cur}</strong></span><input type="number" min="0" placeholder="today's RBI" data-team="${esc(name)}" style="width:100px"/>`;
     el.appendChild(d);
   });
-
-  saveRow.style.display = 'flex';
-  document.getElementById('manual-status').textContent =
-    `${date_str} · ${stat.toUpperCase()} — Enter each team's total and click Save.`;
 }
 
-async function saveManualEntries() {
+async function saveStandings() {
   const secret = document.getElementById('admin-secret').value;
+  const stat   = document.getElementById('entry-stat').value;
   if (!secret) return showAdminAlert('Enter admin password.', 'err');
-  const date_str = document.getElementById('manual-date').value;
-  const stat = document.getElementById('manual-stat').value;
-  const inputs = document.querySelectorAll('#manual-grid input[type=number]');
-  let saved = 0, errors = 0;
 
+  const inputs = document.querySelectorAll('#entry-grid input[type=number]');
+  const entries = [];
   for (const inp of inputs) {
     if (inp.value === '') continue;
     const val = parseInt(inp.value);
     if (isNaN(val) || val < 0) continue;
-    try {
-      const r = await fetch(`${API}/api/manual-entry`, {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({
-          secret,
-          score_date: date_str,
-          fantasy_team: inp.dataset.team,
-          stat_type: stat,
-          value: val,
-          note: 'Commissioner manual entry — historical lineup data unavailable'
-        })
-      });
-      const j = await r.json();
-      if (j.ok) saved++;
-      else errors++;
-    } catch { errors++; }
+    entries.push({team_name: inp.dataset.team, stat, value: val});
   }
+  if (!entries.length) return showAdminAlert('No values entered.', 'err');
 
-  if (saved > 0) {
-    showAdminAlert(`✓ Saved ${saved} entries for ${date_str}. Leaderboard updated.`, 'ok');
-    await loadTeamStats(); renderLB(); updateHero();
-    loadManualGrid();
-  } else if (errors > 0) {
-    showAdminAlert('Error saving. Check password and try again.', 'err');
-  } else {
-    showAdminAlert('No values entered.', 'err');
-  }
+  try {
+    const r = await fetch(`${API}/api/update-standings`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({secret, entries, override: false})
+    });
+    const j = await r.json();
+    if (j.ok) {
+      showAdminAlert(`✓ Updated ${j.updated} teams. Totals accumulated.`, 'ok');
+      document.getElementById('entry-status').textContent = `Saved ${entries.length} entries — added to monthly total.`;
+      // Clear inputs
+      inputs.forEach(inp => inp.value = '');
+      await loadTeamStats(); renderLB(); updateHero(); loadEntryGrid();
+    } else {
+      showAdminAlert('Error saving.', 'err');
+    }
+  } catch { showAdminAlert('Could not reach server.', 'err'); }
 }
 
-// ── ADMIN ─────────────────────────────────────────────────────────────────────
-function renderAdminGrid(){
-  const key=document.getElementById('admin-cat').value;
-  const el=document.getElementById('admin-grid');el.innerHTML='';
-  TEAMS.forEach(name=>{
-    const td=teamData.find(t=>t.team_name===name)||{};
-    const cur=Math.round(td[key]||0);
-    const d=document.createElement('div');d.className='adm-item';
-    d.innerHTML=`<span class="an">${esc(name)}</span><input type="date" data-team-date="${esc(name)}" value="${new Date().toISOString().slice(0,10)}" style="width:130px;font-size:11px"/><input type="number" min="0" placeholder="value" data-team="${esc(name)}" style="width:80px"/>`;
-    el.appendChild(d);
-  });
-}
-async function saveManualStats(){
-  const secret=document.getElementById('admin-secret').value;
-  const key=document.getElementById('admin-cat').value;
-  if(!secret)return showAdminAlert('Enter admin password.','err');
-  const inputs=document.querySelectorAll('#admin-grid input[type=number]');
-  let count=0;
-  for(const inp of inputs){
-    if(!inp.value)continue;const val=parseInt(inp.value);if(isNaN(val)||val<0)continue;
-    const dateInp = document.querySelector(`input[data-team-date="${inp.dataset.team}"]`);
-    const score_date = dateInp ? dateInp.value : new Date().toISOString().slice(0,10);
-    try{await fetch(`${API}/api/sync-now`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({secret,team_override:{team:inp.dataset.team,stat:key,value:val,score_date}})});count++;}catch{}
-  }
-  if(!count)return showAdminAlert('No values entered.','err');
-  showAdminAlert(count+' overrides saved.','ok');
-  await loadTeamStats();renderLB();renderAdminGrid();updateHero();
-}
 async function triggerSync(){
   const secret=document.getElementById('admin-secret').value;
   if(!secret)return showAdminAlert('Enter admin password.','err');
