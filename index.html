@@ -11,8 +11,6 @@
 html{scroll-behavior:smooth}
 body{background:var(--green);color:var(--ink);font-family:var(--fb);font-size:14px;line-height:1.6;min-height:100vh;overflow-x:hidden}
 body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 28px,rgba(0,0,0,.015) 28px,rgba(0,0,0,.015) 29px),repeating-linear-gradient(90deg,transparent,transparent 28px,rgba(0,0,0,.01) 28px,rgba(0,0,0,.01) 29px);pointer-events:none;z-index:0}
-
-/* TICKER */
 .ticker{background:var(--red);height:30px;overflow:hidden;display:flex;align-items:center;position:sticky;top:0;z-index:200;border-bottom:2px solid var(--gold);box-shadow:0 2px 8px rgba(0,0,0,.4)}
 .ticker-tag{background:var(--ink);color:var(--gold3);font-family:var(--fo);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:0 14px;height:100%;display:flex;align-items:center;white-space:nowrap;flex-shrink:0;border-right:1px solid rgba(255,255,255,.1)}
 .ticker-scroll{overflow:hidden;flex:1}
@@ -22,8 +20,6 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 .ti .val{color:var(--gold3);font-weight:700}
 .ti .dot{color:rgba(255,255,255,.4);margin:0 8px}
 @keyframes scrolltick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-
-/* HERO */
 .page{position:relative;z-index:1}
 .hero{background:var(--green);border-bottom:4px solid var(--gold);overflow:hidden;position:relative}
 .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 100% at 0% 50%,rgba(26,58,42,.95) 40%,transparent 70%),radial-gradient(ellipse 70% 100% at 100% 50%,rgba(26,58,42,.95) 40%,transparent 70%);z-index:1}
@@ -37,8 +33,6 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 .hero-stat-big .accent{color:var(--gold3)}
 .hero-stat-label{font-family:var(--fo);font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);margin-top:4px}
 .hero-stat-sub{font-family:var(--fb);font-style:italic;font-size:12px;color:var(--muted2);margin-top:2px}
-
-/* CENTER LOGO */
 .hero-center{text-align:center;padding:20px 32px;flex-shrink:0}
 .logo-diamond{display:inline-flex;flex-direction:column;align-items:center;gap:2px}
 .logo-rule{width:120px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
@@ -54,8 +48,6 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 .rusty-frame img{width:100%;height:100%;object-fit:cover;object-position:top center;filter:sepia(25%) contrast(1.1)}
 .rusty-frame-label{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.85));padding:12px 4px 3px;font-family:var(--fo);font-size:7px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold3);text-align:center}
 .rusty-fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:56px;background:linear-gradient(160deg,#1a2e20,#0d1a12)}
-
-/* QUOTE */
 .quote-banner{background:var(--ink);border-top:1px solid var(--gold);border-bottom:3px solid var(--green2);padding:10px 24px;text-align:center;position:relative;overflow:hidden}
 .quote-banner::before,.quote-banner::after{content:'⚾';position:absolute;top:50%;transform:translateY(-50%);font-size:18px;opacity:.25}
 .quote-banner::before{left:40px}
@@ -63,52 +55,35 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 .q-text{font-family:var(--fb);font-style:italic;font-size:13px;color:var(--parch2);max-width:700px;margin:0 auto;line-height:1.5;transition:opacity .5s}
 .q-mark{color:var(--gold2);font-size:16px}
 .q-author{font-family:var(--fo);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);margin-top:2px}
-
-/* LAYOUT */
 .content-wrap{max-width:1240px;margin:0 auto;padding:18px 16px 60px;display:grid;grid-template-columns:1fr 370px;gap:18px;align-items:start}
 @media(max-width:960px){.content-wrap{grid-template-columns:1fr}}
-
-/* SECTION LABEL */
 .sec-label{font-family:var(--fo);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted2);display:flex;align-items:center;gap:8px;margin-bottom:8px;padding-left:2px}
 .sec-label::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.15)}
-
-/* CARD */
 .card{background:var(--parch);border:1px solid var(--border2);border-radius:3px;margin-bottom:16px;overflow:hidden;box-shadow:0 2px 10px var(--shadow);position:relative}
 .card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--red),var(--gold),var(--red))}
 .card-head{background:var(--green);padding:9px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:2px solid var(--gold)}
 .card-head h2{font-family:var(--fd);font-size:14px;font-weight:700;color:var(--parch);letter-spacing:.02em}
 .ch-r{display:flex;align-items:center;gap:6px}
 .pill{font-family:var(--fo);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:2px}
-.pr{background:var(--red2);color:#fff}
-.pg{background:var(--gold);color:var(--ink)}
-.pgreen{background:var(--green3);color:var(--parch)}
-.pi{background:var(--ink2);color:var(--gold2)}
+.pr{background:var(--red2);color:#fff}.pg{background:var(--gold);color:var(--ink)}.pgreen{background:var(--green3);color:var(--parch)}.pi{background:var(--ink2);color:var(--gold2)}
 .card-body{padding:12px 14px}
-
-/* CAT BAR */
 .cat-bar{display:flex;gap:5px;flex-wrap:wrap;padding:10px 14px;background:var(--parch2);border-bottom:1px solid var(--border2)}
 .cat-btn{background:var(--parch3);border:1px solid var(--border2);border-radius:2px;color:var(--muted);font-family:var(--fo);font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:5px 10px;cursor:pointer;transition:all .14s;white-space:nowrap}
 .cat-btn:hover{background:var(--parch4);color:var(--ink)}
 .cat-btn.active{background:var(--red);border-color:var(--red);color:#fff}
 .cat-btn .mo{display:block;font-size:9px;opacity:.65;font-weight:400;margin-top:1px}
-
-/* COUNTDOWN */
 .cd-strip{display:flex;align-items:center;gap:12px;padding:9px 14px;background:var(--ink2);border-bottom:1px solid var(--gold);flex-wrap:wrap}
 .cd-lbl{font-family:var(--fo);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2)}
 .cd-num{font-family:var(--fd);font-size:22px;font-weight:900;color:var(--gold3);line-height:1}
 .cd-txt{font-size:12px;color:var(--muted2);font-family:var(--fb);font-style:italic}
 .cd-gap{margin-left:auto;font-family:var(--fo);font-size:11px;color:var(--muted2)}
 .cd-gap .gv{color:var(--red3);font-size:15px;font-weight:700}
-
-/* SUM ROW */
 .sum-row{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--border2);background:var(--parch2)}
 .sum-blk{padding:10px 14px;border-right:1px solid var(--border)}
 .sum-blk:last-child{border-right:none}
 .sum-lbl{font-family:var(--fo);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
 .sum-val{font-family:var(--fd);font-size:18px;font-weight:900;color:var(--ink);line-height:1}
 .sum-sub{font-size:10px;color:var(--muted);margin-top:2px}
-
-/* LEADERBOARD */
 .lbt{width:100%;border-collapse:collapse}
 .lbt th{font-family:var(--fo);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:7px 10px;text-align:left;border-bottom:1px solid var(--border2);background:var(--parch2)}
 .lbt th.r{text-align:right}
@@ -117,15 +92,13 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 .lbt tr:hover td{background:rgba(200,160,40,.07)}
 .lbt tr.top-row td{background:rgba(180,134,11,.07)}
 .rk{font-family:var(--fd);font-size:15px;font-weight:900;width:36px}
-.rk.gold{color:var(--gold)} .rk.silver{color:#888} .rk.bronze{color:var(--brown)} .rk.rest{color:var(--muted);font-size:12px}
+.rk.gold{color:var(--gold)}.rk.silver{color:#888}.rk.bronze{color:var(--brown)}.rk.rest{color:var(--muted);font-size:12px}
 .tnc{font-family:var(--fo);font-size:15px;font-weight:700;color:var(--ink2)}
 .barc{width:100px}
 .mb{height:5px;background:var(--parch3);border-radius:2px;border:1px solid var(--border);overflow:hidden}
 .mbf{height:100%;background:linear-gradient(90deg,var(--red2),var(--red3));border-radius:2px;transition:width .5s cubic-bezier(.4,0,.2,1)}
 .totc{font-family:var(--fd);font-size:18px;font-weight:900;color:var(--ink);text-align:right}
 .deltc{font-family:var(--fo);font-size:11px;text-align:right;color:var(--muted)}
-
-/* PLAYER TABLE */
 .plt{width:100%;border-collapse:collapse}
 .plt th{font-family:var(--fo);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:6px 8px;border-bottom:1px solid var(--border2);background:var(--parch2);text-align:left}
 .plt td{padding:8px 8px;border-bottom:1px solid var(--border);vertical-align:middle}
@@ -137,19 +110,15 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 .pft{font-size:10px;color:var(--red2);font-weight:600}
 .ppos{font-family:var(--fo);font-size:9px;font-weight:700;background:var(--green);color:var(--parch);padding:1px 5px;border-radius:2px}
 .pst{font-family:var(--fd);font-size:16px;font-weight:900;color:var(--red);text-align:right}
-
-/* SCORE CARDS */
 .sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px}
 .sc-card{background:var(--parch2);border:1px solid var(--border2);border-radius:2px;padding:9px 11px}
 .sc-st{font-family:var(--fo);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px;color:var(--muted)}
-.sc-st.live{color:#1d7a38} .sc-st.final{color:var(--muted2)}
+.sc-st.live{color:#1d7a38}.sc-st.final{color:var(--muted2)}
 .sc-row{display:flex;align-items:center;justify-content:space-between;padding:2px 0}
 .sc-tm{font-family:var(--fo);font-size:13px;font-weight:700;color:var(--ink2)}
 .sc-v{font-family:var(--fd);font-size:17px;font-weight:900;color:var(--ink2)}
 .sc-v.w{color:var(--red2)}
 .sc-div{border:none;border-top:1px solid var(--border);margin:3px 0}
-
-/* NEWS */
 .ni{padding:9px 14px;border-bottom:1px solid var(--border);display:flex;gap:10px}
 .ni:last-child{border-bottom:none}
 .ni-dot{width:4px;height:4px;border-radius:50%;background:var(--red2);margin-top:7px;flex-shrink:0}
@@ -157,16 +126,12 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 .ni-t a{color:inherit;text-decoration:none}
 .ni-t a:hover{color:var(--red)}
 .ni-d{font-size:10px;color:var(--muted);margin-top:2px;font-family:var(--fo)}
-
-/* DIGEST */
 .dgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .dig-c{background:var(--parch2);border:1px solid var(--border2);border-left:3px solid var(--red);border-radius:0 2px 2px 0;padding:9px 11px}
 .dig-l{font-family:var(--fo);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
 .dig-p{font-family:var(--fo);font-size:13px;font-weight:700;color:var(--ink2)}
 .dig-v{font-family:var(--fd);font-size:22px;font-weight:900;color:var(--red);line-height:1}
 .dig-t{font-size:10px;color:var(--muted)}
-
-/* CHIRP */
 .chirp-form{padding:11px 14px;background:var(--parch2);border-bottom:1px solid var(--border2);display:flex;flex-direction:column;gap:7px}
 .chirp-inputs{display:grid;grid-template-columns:1fr 1fr;gap:7px}
 .chirp-item{padding:9px 14px;border-bottom:1px solid var(--border)}
@@ -177,20 +142,14 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 .chirp-time{font-size:10px;color:var(--muted);margin-left:auto;font-family:var(--fo)}
 .chirp-msg{font-size:13px;color:var(--ink2);line-height:1.45;font-family:var(--fb)}
 .chirp-empty{text-align:center;padding:20px;color:var(--muted);font-size:13px;font-style:italic;font-family:var(--fb)}
-
-/* SBOT STRIP */
 .sbot-strip{background:var(--ink2);border-top:1px solid var(--gold);padding:6px 14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .sbot-lbl{font-family:var(--fo);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2)}
 .sbot-v{font-family:var(--fo);font-size:10px;color:var(--parch3)}
-.sbot-v.ok{color:#28b84a} .sbot-v.wait{color:var(--gold3)}
-
-/* ABOUT RUSTY SIDEBAR */
+.sbot-v.ok{color:#28b84a}.sbot-v.wait{color:var(--gold3)}
 .rusty-stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .rst{background:var(--parch2);border:1px solid var(--border);border-radius:2px;padding:8px;text-align:center}
 .rst .rv{font-family:var(--fd);font-size:20px;font-weight:900;color:var(--red)}
 .rst .rl{font-family:var(--fo);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-
-/* ADMIN */
 .admin-wrap{display:none}
 .admin-wrap.visible{display:block}
 .adm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:7px;margin-bottom:10px}
@@ -200,8 +159,6 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 .alert-box{border-radius:2px;padding:8px 12px;font-size:12px;margin-bottom:10px;display:none;font-family:var(--fb);font-style:italic}
 .alert-box.ok{background:rgba(29,122,56,.1);border:1px solid rgba(29,122,56,.3);color:#1d7a38}
 .alert-box.err{background:rgba(139,26,26,.08);border:1px solid rgba(139,26,26,.3);color:var(--red2)}
-
-/* INPUTS / BTNS */
 input[type=text],input[type=number],input[type=password],select,textarea{background:var(--parch3);border:1px solid var(--border2);border-radius:2px;padding:7px 10px;font-family:var(--fb);font-size:13px;color:var(--ink);outline:none;width:100%;transition:border-color .14s}
 input:focus,select:focus,textarea:focus{border-color:var(--red)}
 textarea{resize:vertical;min-height:65px}
@@ -214,12 +171,9 @@ textarea{resize:vertical;min-height:65px}
 .sort-btn{font-family:var(--fo);font-size:9px;font-weight:700;color:var(--parch3);letter-spacing:.06em;background:transparent;border:1px solid rgba(255,255,255,.25);border-radius:2px;padding:3px 8px;cursor:pointer;transition:all .13s}
 .sort-btn:hover{border-color:var(--gold);color:var(--gold3)}
 .loading{text-align:center;padding:18px;color:var(--muted);font-family:var(--fs);font-size:12px}
-
-/* FOOTER */
 .site-footer{background:var(--ink);border-top:3px solid var(--gold);padding:20px;text-align:center}
 .site-footer p{font-family:var(--fb);font-style:italic;font-size:12px;color:var(--muted2)}
 .site-footer strong{color:var(--gold2);font-style:normal}
-
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-track{background:var(--parch2)}
 ::-webkit-scrollbar-thumb{background:var(--parch4);border-radius:3px}
@@ -238,7 +192,6 @@ textarea{resize:vertical;min-height:65px}
 </div>
 
 <div class="page">
-
 <div class="hero">
   <div class="hero-inner">
     <div class="hero-left">
@@ -257,9 +210,7 @@ textarea{resize:vertical;min-height:65px}
           <span style="font-size:55%;color:var(--parch2);display:block;letter-spacing:.08em">Dynasty League</span>
         </div>
         <div class="rusty-frame">
-          <img src="https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_213,q_auto:best/v1/people/117366/headshot/67/current"
-            alt="Rusty Kuntz"
-            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+          <img src="https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_213,q_auto:best/v1/people/117366/headshot/67/current" alt="Rusty Kuntz" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
           <div class="rusty-fallback" style="display:none">⚾</div>
           <div class="rusty-frame-label">Rusty Kuntz · OF · 1979–85</div>
         </div>
@@ -283,8 +234,6 @@ textarea{resize:vertical;min-height:65px}
 </div>
 
 <div class="content-wrap">
-
-  <!-- LEFT -->
   <div>
     <div class="sec-label">Monthly Prize Race</div>
     <div class="card">
@@ -316,8 +265,7 @@ textarea{resize:vertical;min-height:65px}
       </div>
       <table class="lbt">
         <thead><tr>
-          <th style="width:40px">#</th>
-          <th>Team</th>
+          <th style="width:40px">#</th><th>Team</th>
           <th style="width:100px">Progress</th>
           <th class="r" style="width:65px">Total</th>
           <th class="r" style="width:55px">+/−</th>
@@ -373,7 +321,7 @@ textarea{resize:vertical;min-height:65px}
             <option>JoanMacias</option><option>Xavier</option>
             <option>Los Jankees</option><option>Momin8241</option>
             <option>ericliaci</option><option>Sho Me The Money</option>
-            <option>Designated Shitters 🧻</option><option>Arraezed &amp; Hoerny</option>
+            <option>Designated Shitters</option><option>Arraezed &amp; Hoerny</option>
           </select>
         </div>
         <textarea id="c-msg" placeholder="Say something... 280 chars max" maxlength="280"></textarea>
@@ -386,7 +334,6 @@ textarea{resize:vertical;min-height:65px}
     </div>
   </div>
 
-  <!-- RIGHT -->
   <div>
     <div class="sec-label">Individual Leaders</div>
     <div class="card">
@@ -424,10 +371,9 @@ textarea{resize:vertical;min-height:65px}
       </div>
     </div>
   </div>
+</div>
 
-</div><!-- /content-wrap -->
-
-<!-- ADMIN — hidden, appears only at /?admin -->
+<!-- ADMIN -->
 <div class="admin-wrap" id="admin-wrap">
   <div style="max-width:1240px;margin:0 auto;padding:0 16px 40px">
     <div class="sec-label">Commissioner Panel</div>
@@ -442,7 +388,44 @@ textarea{resize:vertical;min-height:65px}
           <input type="password" id="admin-secret" placeholder="Admin password..." style="width:200px"/>
           <button class="btn btn-r" onclick="triggerSync()">⟳ Force Sync Now</button>
         </div>
-        <div style="font-family:var(--fo);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Manual Stat Override</div>
+
+        <!-- HISTORICAL MANUAL ENTRY — Mar 25-28 -->
+        <div style="font-family:var(--fo);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;padding-top:4px">
+          Historical Manual Entry <span style="color:var(--red2);font-size:9px;text-transform:none;font-weight:400;letter-spacing:0">— Mar 25–28 (no lineup data available)</span>
+        </div>
+        <div style="background:rgba(139,26,26,.07);border:1px solid rgba(139,26,26,.2);border-left:3px solid var(--red);padding:9px 12px;margin-bottom:10px;font-size:11px;color:var(--ink2);font-family:var(--fb);font-style:italic">
+          Fantrax does not provide historical lineup data for past scoring days. Enter each team's official started-only RBI total per date. Stored as <strong>MANUAL</strong> and included in the monthly leaderboard.
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;align-items:flex-end">
+          <div>
+            <div style="font-family:var(--fo);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Date</div>
+            <select id="manual-date" style="width:180px">
+              <option value="2026-03-25">March 25, 2026</option>
+              <option value="2026-03-26">March 26, 2026</option>
+              <option value="2026-03-27">March 27, 2026</option>
+              <option value="2026-03-28">March 28, 2026</option>
+            </select>
+          </div>
+          <div>
+            <div style="font-family:var(--fo);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Stat</div>
+            <select id="manual-stat" style="width:160px">
+              <option value="rbi">RBI (Mar/Apr)</option>
+              <option value="k">Strikeouts (May)</option>
+              <option value="h">Hits (June)</option>
+              <option value="sb">Stolen Bases (July)</option>
+              <option value="hr">Home Runs (Aug)</option>
+            </select>
+          </div>
+          <button class="btn" onclick="loadManualGrid()" style="background:var(--green);color:var(--parch);border-color:var(--green2)">Load Teams</button>
+        </div>
+        <div class="adm-grid" id="manual-grid"></div>
+        <div class="btn-row" id="manual-save-row" style="display:none">
+          <button class="btn btn-r" onclick="saveManualEntries()">💾 Save Manual Entries</button>
+        </div>
+        <div id="manual-status" style="font-size:11px;color:var(--muted);font-family:var(--fb);font-style:italic;margin-bottom:4px"></div>
+
+        <!-- REGULAR STAT OVERRIDE -->
+        <div style="font-family:var(--fo);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px;border-top:1px solid var(--border2);padding-top:14px">Manual Stat Override</div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
           <select id="admin-cat" style="width:220px" onchange="renderAdminGrid()">
             <option value="rbi">RBI (Mar/Apr)</option>
@@ -454,7 +437,9 @@ textarea{resize:vertical;min-height:65px}
         </div>
         <div class="adm-grid" id="admin-grid"><div class="loading">Loading...</div></div>
         <div class="btn-row"><button class="btn btn-r" onclick="saveManualStats()">Save Overrides</button></div>
-        <div style="font-family:var(--fo);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px">September Single-Day Score</div>
+
+        <!-- SEPTEMBER -->
+        <div style="font-family:var(--fo);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px;border-top:1px solid var(--border2);padding-top:14px">September Single-Day Score</div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px">
           <select id="sept-team" style="width:220px">
             <option value="">Select team...</option>
@@ -462,7 +447,7 @@ textarea{resize:vertical;min-height:65px}
             <option>Red Birds</option><option>Daddy Yankee</option><option>¡pinto!</option>
             <option>JoanMacias</option><option>Xavier</option><option>Los Jankees</option>
             <option>Momin8241</option><option>ericliaci</option><option>Sho Me The Money</option>
-            <option>Designated Shitters 🧻</option><option>Arraezed &amp; Hoerny</option>
+            <option>Designated Shitters</option><option>Arraezed &amp; Hoerny</option>
           </select>
           <input type="number" id="sept-score" placeholder="Score" style="width:100px"/>
           <button class="btn btn-g" onclick="saveSeptScore()">Save</button>
@@ -480,11 +465,10 @@ textarea{resize:vertical;min-height:65px}
     <span style="font-size:11px;opacity:.6">Powered by SeanBot 1.0 · Auto-syncs after the last MLB game each night · Stats reflect started players only</span>
   </p>
 </footer>
-
-</div><!-- /page -->
+</div>
 
 <script>
-const API = 'https://seanbot-backend.onrender.com'; // ← REPLACE WITH YOUR RENDER URL
+const API = 'https://seanbot-backend.onrender.com';
 
 const QUOTES = [
   {t:"It ain't over till it's over.",a:"Yogi Berra"},
@@ -500,69 +484,47 @@ const QUOTES = [
   {t:"There are three types of baseball players: those who make it happen, those who watch it happen, and those who wonder what happens.",a:"Tommy Lasorda"},
   {t:"He drove in the game-winning run in Game 5 of the World Series. That's all you need to know.",a:"On Rusty Kuntz, 1984"},
   {t:"Little League baseball is a very good thing because it keeps the parents off the streets.",a:"Yogi Berra"},
-  {t:"The game of baseball is a clean, straight game, and it summons to its presence everybody who enjoys clean, straight athletics.",a:"William Howard Taft"},
+  {t:"The game of baseball is a clean, straight game.",a:"William Howard Taft"},
 ];
 
 const CATS = [
-  {name:'RBI',         key:'rbi',         period:'March/April', startMonth:3, endMonth:4,  endDay:30},
-  {name:'Strikeouts',  key:'strikeouts',  period:'May',         startMonth:5, endMonth:5,  endDay:31},
-  {name:'Hits',        key:'hits',        period:'June',        startMonth:6, endMonth:6,  endDay:30},
-  {name:'Stolen Bases',key:'stolen_bases',period:'July',        startMonth:7, endMonth:7,  endDay:31},
-  {name:'Home Runs',   key:'home_runs',   period:'August',      startMonth:8, endMonth:8,  endDay:31},
-  {name:'Single-Day',  key:null,          period:'September',   startMonth:9, endMonth:9,  endDay:30},
+  {name:'RBI',key:'rbi',period:'March/April',startMonth:3,endMonth:4,endDay:30},
+  {name:'Strikeouts',key:'strikeouts',period:'May',startMonth:5,endMonth:5,endDay:31},
+  {name:'Hits',key:'hits',period:'June',startMonth:6,endMonth:6,endDay:30},
+  {name:'Stolen Bases',key:'stolen_bases',period:'July',startMonth:7,endMonth:7,endDay:31},
+  {name:'Home Runs',key:'home_runs',period:'August',startMonth:8,endMonth:8,endDay:31},
+  {name:'Single-Day',key:null,period:'September',startMonth:9,endMonth:9,endDay:30},
 ];
 const STAT_MAP={0:'rbi',1:'k',2:'h',3:'sb',4:'hr'};
-const TEAMS=['Possibilities',"Yoshi's Islanders",'thebigfur','Red Birds','Daddy Yankee','¡pinto!','JoanMacias','Xavier','Los Jankees','Momin8241','ericliaci','Sho Me The Money','Designated Shitters 🧻','Arraezed & Hoerny'];
+const TEAMS=['Possibilities',"Yoshi's Islanders",'thebigfur','Red Birds','Daddy Yankee','\u00a1pinto!','JoanMacias','Xavier','Los Jankees','Momin8421','ericliaci','Sho Me The Money','Designated Shitters','Arraezed & Hoerny'];
 
 let catIdx=0,sortAsc=false,teamData=[],playerData={rbi:[],k:[],h:[],sb:[],hr:[]},mlbScores=[],mlbNews=[],chirpData=[];
 
-// ADMIN
 function checkAdmin(){if(window.location.search.includes('admin')){document.getElementById('admin-wrap').classList.add('visible');renderAdminGrid();}}
 
-// QUOTES
 function showQuote(){
   const q=QUOTES[Math.floor(Math.random()*QUOTES.length)];
-  const qb=document.getElementById('q-body');
-  const qa=document.getElementById('q-author');
+  const qb=document.getElementById('q-body');const qa=document.getElementById('q-author');
   qb.style.opacity='0';
   setTimeout(()=>{qb.textContent=q.t;qa.textContent='— '+q.a;qb.style.opacity='1';},400);
 }
-showQuote();
-setInterval(showQuote,12000);
+showQuote();setInterval(showQuote,12000);
 
-// COUNTDOWN — smart period begins/ends logic
 function renderCountdown(){
-  const cat=CATS[catIdx];
-  const now=new Date();
-  const m=now.getMonth()+1;
-  const periodStarted=(m>=cat.startMonth);
-  const periodOver=(m>cat.endMonth);
+  const cat=CATS[catIdx];const now=new Date();const m=now.getMonth()+1;
+  const periodStarted=(m>=cat.startMonth);const periodOver=(m>cat.endMonth);
   let days,lbl,cdLbl;
-
-  if(!periodStarted){
-    const start=new Date(now.getFullYear(),cat.startMonth-1,1);
-    days=Math.max(0,Math.ceil((start-now)/86400000));
-    lbl=`days until ${cat.period} begins`;
-    cdLbl='Period Begins In';
-  } else if(periodOver){
-    days=0; lbl=`${cat.period} has ended`; cdLbl='Period Status';
-  } else {
-    const end=new Date(now.getFullYear(),cat.endMonth-1,cat.endDay,23,59,59);
-    days=Math.max(0,Math.ceil((end-now)/86400000));
-    lbl=days===0?`Last day of ${cat.period}`:`days left in ${cat.period}`;
-    cdLbl='Period Ends In';
-  }
-
+  if(!periodStarted){const start=new Date(now.getFullYear(),cat.startMonth-1,1);days=Math.max(0,Math.ceil((start-now)/86400000));lbl=`days until ${cat.period} begins`;cdLbl='Period Begins In';}
+  else if(periodOver){days=0;lbl=`${cat.period} has ended`;cdLbl='Period Status';}
+  else{const end=new Date(now.getFullYear(),cat.endMonth-1,cat.endDay,23,59,59);days=Math.max(0,Math.ceil((end-now)/86400000));lbl=days===0?`Last day of ${cat.period}`:`days left in ${cat.period}`;cdLbl='Period Ends In';}
   document.getElementById('cd-lbl').textContent=cdLbl;
   document.getElementById('cd-num').textContent=days;
   document.getElementById('cd-txt').textContent=lbl;
-  // hero
   document.getElementById('hero-days').textContent=days;
   document.getElementById('hero-cd-label').textContent=periodStarted&&!periodOver?`days left · ${cat.period}`:`days until ${cat.period}`;
   document.getElementById('hero-period-lbl').textContent=cat.period+' prize category';
 }
 
-// DATA LOADING
 async function loadAll(){
   await Promise.allSettled([loadTeamStats(),loadPlayerLeaders(),loadMLBScores(),loadMLBNews(),loadChirps(),loadStatus()]);
   renderLB();renderPlayerLeaders();renderTicker();renderNewsList();renderScores();renderDigest();updateHero();
@@ -584,15 +546,13 @@ async function loadChirps(){
 async function loadStatus(){
   try{
     const r=await fetch(`${API}/api/status`);const j=await r.json();
-    const st=j.sync_status||'idle';
-    const el=document.getElementById('sbot-st');
+    const st=j.sync_status||'idle';const el=document.getElementById('sbot-st');
     el.textContent=st;el.className='sbot-v '+(st==='done'?'ok':st==='syncing'?'wait':'');
     document.getElementById('sbot-sync').textContent=j.last_sync_time||'Not yet';
     document.getElementById('sbot-games').textContent=`${j.games_final||0}/${j.games_today||0} Final`;
   }catch{document.getElementById('sbot-st').textContent='Offline';}
 }
 
-// CAT SELECT
 function selectCat(idx,btn){
   catIdx=idx;
   document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
@@ -605,7 +565,6 @@ function selectCat(idx,btn){
   renderLB();renderPlayerLeaders();renderCountdown();updateHero();
 }
 
-// HERO
 function updateHero(){
   const cat=CATS[catIdx];const key=cat.key;
   if(!key||!teamData.length)return;
@@ -618,7 +577,6 @@ function updateHero(){
   document.getElementById('cd-gap').textContent=gap>0?'+'+gap:'—';
 }
 
-// LEADERBOARD
 function toggleSort(){sortAsc=!sortAsc;renderLB();}
 function renderLB(){
   const key=CATS[catIdx].key;
@@ -643,7 +601,6 @@ function renderLB(){
   });
 }
 
-// PLAYER LEADERS
 function renderPlayerLeaders(){
   const sk=STAT_MAP[catIdx];const tbody=document.getElementById('pl-body');
   if(!sk){tbody.innerHTML='<tr><td colspan="3" class="loading">Manual category</td></tr>';return;}
@@ -657,7 +614,6 @@ function renderPlayerLeaders(){
   });
 }
 
-// TICKER
 function renderTicker(){
   const items=[];
   CATS.forEach(cat=>{
@@ -673,7 +629,6 @@ function renderTicker(){
   if(items.length)document.getElementById('ticker-track').innerHTML=[...items,...items].join('');
 }
 
-// SCORES
 function renderScores(){
   const today=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
   document.getElementById('scores-head').textContent='MLB — '+today;
@@ -689,20 +644,18 @@ function renderScores(){
   });
 }
 
-// NEWS
 function renderNewsList(){
   const el=document.getElementById('news-list');
   if(!mlbNews.length){el.innerHTML='<div class="loading">No news available</div>';return;}
   el.innerHTML='';
   mlbNews.slice(0,8).forEach(n=>{
-    const date=n.pub_date?new Date(n.pub_date).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'';
+    const dt=n.pub_date?new Date(n.pub_date).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'';
     const d=document.createElement('div');d.className='ni';
-    d.innerHTML=`<div class="ni-dot"></div><div><div class="ni-t"><a href="${esc(n.link)}" target="_blank" rel="noopener">${esc(n.title)}</a></div><div class="ni-d">${date}</div></div>`;
+    d.innerHTML=`<div class="ni-dot"></div><div><div class="ni-t"><a href="${esc(n.link)}" target="_blank" rel="noopener">${esc(n.title)}</a></div><div class="ni-d">${dt}</div></div>`;
     el.appendChild(d);
   });
 }
 
-// DIGEST
 function renderDigest(){
   const defs=[{key:'rbi',l:'RBI King'},{key:'k',l:'Strikeout Machine'},{key:'h',l:'Hit Parade'},{key:'sb',l:'Speed Demon'},{key:'hr',l:'Long Ball'}];
   const grid=document.getElementById('digest-grid');grid.innerHTML='';
@@ -714,7 +667,6 @@ function renderDigest(){
   });
 }
 
-// CHIRP WALL
 document.getElementById('c-msg').addEventListener('input',function(){document.getElementById('c-count').textContent=280-this.value.length;});
 async function postChirp(){
   const auth=document.getElementById('c-auth').value.trim();
@@ -738,7 +690,90 @@ function renderChirpList(){
   });
 }
 
-// ADMIN
+// ── MANUAL HISTORICAL ENTRY ───────────────────────────────────────────────────
+async function loadManualGrid() {
+  const date_str = document.getElementById('manual-date').value;
+  const stat = document.getElementById('manual-stat').value;
+  const el = document.getElementById('manual-grid');
+  const saveRow = document.getElementById('manual-save-row');
+  el.innerHTML = '<div class="loading">Loading...</div>';
+  saveRow.style.display = 'none';
+
+  // Load any existing manual entries for this date/stat
+  let existing = {};
+  try {
+    const r = await fetch(`${API}/api/manual-entries?month=${date_str.slice(0,7)}`);
+    const j = await r.json();
+    (j.entries || []).forEach(e => {
+      if (e.score_date === date_str && e.stat_type === stat) {
+        existing[e.fantasy_team] = e.value;
+      }
+    });
+  } catch {}
+
+  el.innerHTML = '';
+  TEAMS.forEach(name => {
+    const cur = existing[name] !== undefined ? existing[name] : '';
+    const saved = cur !== '';
+    const d = document.createElement('div');
+    d.className = 'adm-item';
+    d.innerHTML = `
+      <span class="an">${esc(name)}</span>
+      <span class="ac" style="${saved ? 'color:var(--green3);font-weight:700' : ''}">${saved ? '✓ saved: '+cur : 'not set'}</span>
+      <input type="number" min="0" placeholder="RBI total"
+        data-team="${esc(name)}" value="${saved ? cur : ''}" style="width:90px"/>
+    `;
+    el.appendChild(d);
+  });
+
+  saveRow.style.display = 'flex';
+  document.getElementById('manual-status').textContent =
+    `${date_str} · ${stat.toUpperCase()} — Enter each team's total and click Save.`;
+}
+
+async function saveManualEntries() {
+  const secret = document.getElementById('admin-secret').value;
+  if (!secret) return showAdminAlert('Enter admin password.', 'err');
+  const date_str = document.getElementById('manual-date').value;
+  const stat = document.getElementById('manual-stat').value;
+  const inputs = document.querySelectorAll('#manual-grid input[type=number]');
+  let saved = 0, errors = 0;
+
+  for (const inp of inputs) {
+    if (inp.value === '') continue;
+    const val = parseInt(inp.value);
+    if (isNaN(val) || val < 0) continue;
+    try {
+      const r = await fetch(`${API}/api/manual-entry`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({
+          secret,
+          score_date: date_str,
+          fantasy_team: inp.dataset.team,
+          stat_type: stat,
+          value: val,
+          note: 'Commissioner manual entry — historical lineup data unavailable'
+        })
+      });
+      const j = await r.json();
+      if (j.ok) saved++;
+      else errors++;
+    } catch { errors++; }
+  }
+
+  if (saved > 0) {
+    showAdminAlert(`✓ Saved ${saved} entries for ${date_str}. Leaderboard updated.`, 'ok');
+    await loadTeamStats(); renderLB(); updateHero();
+    loadManualGrid();
+  } else if (errors > 0) {
+    showAdminAlert('Error saving. Check password and try again.', 'err');
+  } else {
+    showAdminAlert('No values entered.', 'err');
+  }
+}
+
+// ── ADMIN ─────────────────────────────────────────────────────────────────────
 function renderAdminGrid(){
   const key=document.getElementById('admin-cat').value;
   const el=document.getElementById('admin-grid');el.innerHTML='';
@@ -787,7 +822,6 @@ function showAdminAlert(msg,type){
 
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 
-// INIT
 checkAdmin();renderCountdown();loadAll();
 setInterval(()=>{loadMLBScores();renderScores();renderTicker();},5*60*1000);
 setInterval(()=>{loadTeamStats();renderLB();updateHero();},10*60*1000);
