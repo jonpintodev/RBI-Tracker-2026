@@ -3,739 +3,1411 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>The Rusty Kuntz Dynasty League</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Oswald:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Special+Elite&display=swap" rel="stylesheet"/>
+<title>Rusty Kuntz Dynasty League</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Oswald:wght@300;400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
 <style>
-:root{--parch:#f2ead8;--parch2:#e8dfc4;--parch3:#ddd3b4;--parch4:#cfc3a0;--green:#1a3a2a;--green2:#245238;--green3:#2e6644;--red:#8b1a1a;--red2:#b02020;--red3:#d42828;--gold:#b8860b;--gold2:#d4a017;--gold3:#f0c040;--ink:#1c1008;--ink2:#2d1f0e;--brown:#5c3d1e;--muted:#8a7560;--muted2:#b09878;--border:rgba(92,61,30,0.2);--border2:rgba(92,61,30,0.35);--shadow:rgba(28,16,8,0.2);--fd:'Playfair Display',serif;--fo:'Oswald',sans-serif;--fb:'Libre Baskerville',serif;--fs:'Special Elite',cursive}
+/* ── TOKENS ──────────────────────────────────────────────────────────────── */
+:root{
+  --cream:#f5efe0;--cream2:#ede4cc;--cream3:#e2d5b8;--cream4:#d4c49e;
+  --forest:#1b3828;--forest2:#244d38;--forest3:#2e6348;
+  --crimson:#8b1a1a;--crimson2:#a82020;--crimson3:#c42828;
+  --amber:#b8820a;--amber2:#d4980f;--amber3:#f0b830;
+  --ink:#18100a;--ink2:#2a1c0e;--ink3:#3d2c18;
+  --dust:#7a6a54;--dust2:#a08060;--dust3:#c4a07a;
+  --seam:#fff;
+  --r:3px;
+  --shadow:0 2px 16px rgba(24,16,10,.18);
+  --shadow-lg:0 8px 40px rgba(24,16,10,.28);
+  --f-head:'Playfair Display',serif;
+  --f-ui:'Oswald',sans-serif;
+  --f-body:'Libre Baskerville',serif;
+}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{background:var(--green);color:var(--ink);font-family:var(--fb);font-size:14px;line-height:1.6;min-height:100vh;overflow-x:hidden}
-body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 28px,rgba(0,0,0,.015) 28px,rgba(0,0,0,.015) 29px),repeating-linear-gradient(90deg,transparent,transparent 28px,rgba(0,0,0,.01) 28px,rgba(0,0,0,.01) 29px);pointer-events:none;z-index:0}
-.ticker{background:var(--red);height:30px;overflow:hidden;display:flex;align-items:center;position:sticky;top:0;z-index:200;border-bottom:2px solid var(--gold);box-shadow:0 2px 8px rgba(0,0,0,.4)}
-.ticker-tag{background:var(--ink);color:var(--gold3);font-family:var(--fo);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:0 14px;height:100%;display:flex;align-items:center;white-space:nowrap;flex-shrink:0;border-right:1px solid rgba(255,255,255,.1)}
+html{scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
+body{
+  background:var(--forest);
+  color:var(--ink);
+  font-family:var(--f-body);
+  font-size:15px;
+  line-height:1.6;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* leather texture overlay */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background:
+    repeating-linear-gradient(0deg,transparent,transparent 32px,rgba(0,0,0,.018) 32px,rgba(0,0,0,.018) 33px),
+    repeating-linear-gradient(90deg,transparent,transparent 32px,rgba(0,0,0,.012) 32px,rgba(0,0,0,.012) 33px);
+  pointer-events:none;z-index:0;
+}
+
+/* ── TICKER ──────────────────────────────────────────────────────────────── */
+.ticker{
+  position:sticky;top:0;z-index:300;
+  background:var(--crimson);
+  height:32px;
+  display:flex;align-items:center;
+  border-bottom:2px solid var(--amber);
+  box-shadow:0 2px 12px rgba(0,0,0,.5);
+}
+.ticker-label{
+  flex-shrink:0;
+  background:var(--ink);
+  color:var(--amber3);
+  font-family:var(--f-ui);
+  font-size:9px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;
+  padding:0 16px;height:100%;
+  display:flex;align-items:center;
+  border-right:1px solid rgba(255,255,255,.1);
+  white-space:nowrap;
+}
 .ticker-scroll{overflow:hidden;flex:1}
-.ticker-track{display:flex;animation:scrolltick 60s linear infinite;white-space:nowrap}
+.ticker-track{display:flex;animation:ticker 60s linear infinite;white-space:nowrap}
 .ticker-track:hover{animation-play-state:paused}
-.ti{font-family:var(--fo);font-size:12px;font-weight:600;color:#fff;padding:0 30px;letter-spacing:.03em}
-.ti .val{color:var(--gold3);font-weight:700}
-.ti .dot{color:rgba(255,255,255,.4);margin:0 8px}
-@keyframes scrolltick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.tick{font-family:var(--f-ui);font-size:12px;font-weight:500;color:#fff;padding:0 32px;letter-spacing:.04em}
+.tick b{color:var(--amber3)}
+.tick .sep{color:rgba(255,255,255,.3);margin:0 8px}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ── HEADER ──────────────────────────────────────────────────────────────── */
+.site-header{
+  background:var(--forest);
+  border-bottom:4px solid var(--amber);
+  position:relative;overflow:hidden;
+}
+.site-header::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 120% at 50% 0%,rgba(255,184,0,.06) 0%,transparent 70%);
+  pointer-events:none;
+}
+.header-inner{
+  max-width:1100px;margin:0 auto;
+  padding:28px 20px 24px;
+  display:flex;flex-direction:column;align-items:center;
+  text-align:center;position:relative;z-index:1;
+}
+.header-eyebrow{
+  font-family:var(--f-ui);font-size:9px;font-weight:600;
+  letter-spacing:.28em;text-transform:uppercase;
+  color:var(--amber2);margin-bottom:8px;
+  display:flex;align-items:center;gap:10px;
+}
+.header-eyebrow::before,.header-eyebrow::after{
+  content:'';flex:1;height:1px;
+  background:linear-gradient(90deg,transparent,var(--amber),transparent);
+  max-width:60px;
+}
+.site-name{
+  font-family:var(--f-head);font-weight:900;
+  font-size:clamp(2.4rem,8vw,4.8rem);
+  color:var(--cream);line-height:.9;
+  text-shadow:3px 4px 0 rgba(0,0,0,.5);
+  letter-spacing:-.01em;
+}
+.site-name em{color:var(--amber3);font-style:normal}
+.site-tagline{
+  font-family:var(--f-body);font-style:italic;
+  font-size:clamp(.7rem,2vw,.9rem);
+  color:var(--dust3);margin-top:6px;
+  letter-spacing:.04em;
+}
+.header-stats{
+  display:flex;gap:0;margin-top:20px;
+  background:var(--ink);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:var(--r);overflow:hidden;
+}
+.hstat{
+  padding:10px 20px;border-right:1px solid rgba(255,255,255,.07);
+  text-align:center;min-width:90px;
+}
+.hstat:last-child{border-right:none}
+.hstat-val{
+  font-family:var(--f-head);font-size:1.6rem;font-weight:900;
+  color:var(--amber3);line-height:1;
+}
+.hstat-lbl{
+  font-family:var(--f-ui);font-size:8px;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--dust2);margin-top:2px;
+}
+
+/* ── QUOTE STRIP ─────────────────────────────────────────────────────────── */
+.quote-strip{
+  background:var(--ink2);
+  border-bottom:2px solid var(--forest2);
+  padding:10px 20px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.quote-strip::before,.quote-strip::after{
+  content:'⚾';position:absolute;top:50%;transform:translateY(-50%);
+  font-size:20px;opacity:.12;
+}
+.quote-strip::before{left:30px}.quote-strip::after{right:30px}
+.quote-text{
+  font-family:var(--f-body);font-style:italic;
+  font-size:clamp(.75rem,2vw,.85rem);
+  color:var(--cream2);max-width:600px;margin:0 auto;
+  transition:opacity .5s;
+}
+.quote-text .qm{color:var(--amber2);font-size:1.1em}
+.quote-author{
+  font-family:var(--f-ui);font-size:9px;font-weight:600;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--dust2);margin-top:3px;
+}
+
+/* ── NAV TABS ────────────────────────────────────────────────────────────── */
+.nav-tabs{
+  background:var(--ink);
+  border-bottom:2px solid var(--amber);
+  display:flex;overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.nav-tabs::-webkit-scrollbar{display:none}
+.nav-tab{
+  flex-shrink:0;
+  font-family:var(--f-ui);font-size:11px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--dust2);
+  padding:13px 20px;
+  background:transparent;border:none;cursor:pointer;
+  border-bottom:3px solid transparent;
+  transition:all .15s;white-space:nowrap;
+}
+.nav-tab:hover{color:var(--cream2)}
+.nav-tab.active{color:var(--amber3);border-bottom-color:var(--amber3)}
+
+/* ── LAYOUT ──────────────────────────────────────────────────────────────── */
 .page{position:relative;z-index:1}
-.hero{background:var(--green);border-bottom:4px solid var(--gold);overflow:hidden;position:relative}
-.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 100% at 0% 50%,rgba(26,58,42,.95) 40%,transparent 70%),radial-gradient(ellipse 70% 100% at 100% 50%,rgba(26,58,42,.95) 40%,transparent 70%);z-index:1}
-.hero-inner{max-width:1240px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:0;position:relative;z-index:2;min-height:220px}
-.hero-left{text-align:left;padding:24px 0}
-.hero-right{text-align:right;padding:24px 0}
-.league-eyebrow{font-family:var(--fo);font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold2);margin-bottom:6px;display:flex;align-items:center;gap:8px}
-.league-eyebrow::before,.league-eyebrow::after{content:'◆';color:var(--gold);font-size:8px}
-.hero-right .league-eyebrow{justify-content:flex-end}
-.hero-stat-big{font-family:var(--fd);font-size:clamp(1.8rem,4vw,3rem);font-weight:900;color:var(--parch);line-height:1;text-shadow:2px 2px 0 rgba(0,0,0,.5)}
-.hero-stat-big .accent{color:var(--gold3)}
-.hero-stat-label{font-family:var(--fo);font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);margin-top:4px}
-.hero-stat-sub{font-family:var(--fb);font-style:italic;font-size:12px;color:var(--muted2);margin-top:2px}
-.hero-center{text-align:center;padding:20px 32px;flex-shrink:0}
-.logo-diamond{display:inline-flex;flex-direction:column;align-items:center;gap:2px}
-.logo-rule{width:120px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
-.logo-est{font-family:var(--fo);font-size:9px;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:var(--gold2);margin:6px 0 4px}
-.logo-title{font-family:var(--fd);font-weight:900;font-size:clamp(1.6rem,4vw,2.8rem);color:var(--parch);line-height:.95;text-align:center;text-shadow:2px 3px 0 rgba(0,0,0,.6);letter-spacing:-.01em}
-.logo-title .rusty{color:var(--gold3);display:block}
-.logo-title .kuntz{display:block;font-size:110%}
-.logo-subtitle{font-family:var(--fb);font-style:italic;font-size:10px;color:var(--muted2);margin-top:4px;letter-spacing:.04em}
-.seanbot-credit{font-family:var(--fo);font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.25);margin-top:10px;display:flex;align-items:center;justify-content:center;gap:5px}
-.sbot-dot{width:5px;height:5px;border-radius:50%;background:#28b84a;box-shadow:0 0 4px #28b84a;animation:sbpulse 2s infinite}
-@keyframes sbpulse{0%,100%{opacity:1}50%{opacity:.3}}
-.rusty-frame{width:100px;height:120px;border:3px solid var(--gold);border-radius:3px;overflow:hidden;margin:8px auto 0;box-shadow:0 4px 16px rgba(0,0,0,.5);background:var(--ink2);position:relative}
-.rusty-frame img{width:100%;height:100%;object-fit:cover;object-position:top center;filter:sepia(25%) contrast(1.1)}
-.rusty-frame-label{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.85));padding:12px 4px 3px;font-family:var(--fo);font-size:7px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold3);text-align:center}
-.rusty-fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:56px;background:linear-gradient(160deg,#1a2e20,#0d1a12)}
-.quote-banner{background:var(--ink);border-top:1px solid var(--gold);border-bottom:3px solid var(--green2);padding:10px 24px;text-align:center;position:relative;overflow:hidden}
-.quote-banner::before,.quote-banner::after{content:'⚾';position:absolute;top:50%;transform:translateY(-50%);font-size:18px;opacity:.25}
-.quote-banner::before{left:40px}
-.quote-banner::after{right:40px}
-.q-text{font-family:var(--fb);font-style:italic;font-size:13px;color:var(--parch2);max-width:700px;margin:0 auto;line-height:1.5;transition:opacity .5s}
-.q-mark{color:var(--gold2);font-size:16px}
-.q-author{font-family:var(--fo);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);margin-top:2px}
-.content-wrap{max-width:1240px;margin:0 auto;padding:18px 16px 60px;display:grid;grid-template-columns:1fr 370px;gap:18px;align-items:start}
-@media(max-width:960px){.content-wrap{grid-template-columns:1fr}}
-.sec-label{font-family:var(--fo);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted2);display:flex;align-items:center;gap:8px;margin-bottom:8px;padding-left:2px}
-.sec-label::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.15)}
-.card{background:var(--parch);border:1px solid var(--border2);border-radius:3px;margin-bottom:16px;overflow:hidden;box-shadow:0 2px 10px var(--shadow);position:relative}
-.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--red),var(--gold),var(--red))}
-.card-head{background:var(--green);padding:9px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:2px solid var(--gold)}
-.card-head h2{font-family:var(--fd);font-size:14px;font-weight:700;color:var(--parch);letter-spacing:.02em}
-.ch-r{display:flex;align-items:center;gap:6px}
-.pill{font-family:var(--fo);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:2px}
-.pr{background:var(--red2);color:#fff}.pg{background:var(--gold);color:var(--ink)}.pgreen{background:var(--green3);color:var(--parch)}.pi{background:var(--ink2);color:var(--gold2)}
-.card-body{padding:12px 14px}
-.cat-bar{display:flex;gap:5px;flex-wrap:wrap;padding:10px 14px;background:var(--parch2);border-bottom:1px solid var(--border2)}
-.cat-btn{background:var(--parch3);border:1px solid var(--border2);border-radius:2px;color:var(--muted);font-family:var(--fo);font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:5px 10px;cursor:pointer;transition:all .14s;white-space:nowrap}
-.cat-btn:hover{background:var(--parch4);color:var(--ink)}
-.cat-btn.active{background:var(--red);border-color:var(--red);color:#fff}
-.cat-btn .mo{display:block;font-size:9px;opacity:.65;font-weight:400;margin-top:1px}
-.cd-strip{display:flex;align-items:center;gap:12px;padding:9px 14px;background:var(--ink2);border-bottom:1px solid var(--gold);flex-wrap:wrap}
-.cd-lbl{font-family:var(--fo);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2)}
-.cd-num{font-family:var(--fd);font-size:22px;font-weight:900;color:var(--gold3);line-height:1}
-.cd-txt{font-size:12px;color:var(--muted2);font-family:var(--fb);font-style:italic}
-.cd-gap{margin-left:auto;font-family:var(--fo);font-size:11px;color:var(--muted2)}
-.cd-gap .gv{color:var(--red3);font-size:15px;font-weight:700}
-.sum-row{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--border2);background:var(--parch2)}
-.sum-blk{padding:10px 14px;border-right:1px solid var(--border)}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+.wrap{max-width:1100px;margin:0 auto;padding:20px 16px 60px}
+.two-col{display:grid;grid-template-columns:1fr 360px;gap:18px;align-items:start}
+@media(max-width:900px){.two-col{grid-template-columns:1fr}}
+
+/* ── SECTION LABEL ───────────────────────────────────────────────────────── */
+.sec{
+  font-family:var(--f-ui);font-size:9px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;
+  color:var(--dust3);
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:10px;
+}
+.sec::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.12)}
+
+/* ── CARD ────────────────────────────────────────────────────────────────── */
+.card{
+  background:var(--cream);
+  border:1px solid rgba(92,61,30,.3);
+  border-radius:var(--r);
+  overflow:hidden;
+  box-shadow:var(--shadow);
+  position:relative;
+  margin-bottom:18px;
+}
+.card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--crimson),var(--amber),var(--crimson));
+}
+.card-head{
+  background:var(--forest);
+  padding:10px 16px;
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  border-bottom:2px solid var(--amber);
+}
+.card-head h2{
+  font-family:var(--f-head);font-size:15px;font-weight:700;
+  color:var(--cream);letter-spacing:.02em;
+}
+.card-body{padding:14px 16px}
+
+/* ── PILL ────────────────────────────────────────────────────────────────── */
+.pill{
+  font-family:var(--f-ui);font-size:8px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;
+  padding:3px 9px;border-radius:2px;
+}
+.pill-red{background:var(--crimson2);color:#fff}
+.pill-gold{background:var(--amber);color:var(--ink)}
+.pill-green{background:var(--forest3);color:var(--cream)}
+.pill-ink{background:var(--ink2);color:var(--amber2)}
+
+/* ── CATEGORY BAR ────────────────────────────────────────────────────────── */
+.cat-bar{
+  display:flex;gap:5px;flex-wrap:wrap;
+  padding:10px 16px;
+  background:var(--cream2);
+  border-bottom:1px solid rgba(92,61,30,.2);
+}
+.cat-btn{
+  font-family:var(--f-ui);font-size:10px;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;
+  padding:5px 12px;border-radius:2px;cursor:pointer;
+  background:var(--cream3);
+  border:1px solid rgba(92,61,30,.25);
+  color:var(--dust);transition:all .12s;
+}
+.cat-btn:hover{background:var(--cream4);color:var(--ink)}
+.cat-btn.active{background:var(--crimson);border-color:var(--crimson);color:#fff}
+.cat-btn small{display:block;font-size:8px;opacity:.7;font-weight:400;margin-top:1px}
+
+/* ── VIEW TOGGLE ─────────────────────────────────────────────────────────── */
+.view-toggle{
+  display:flex;gap:6px;padding:10px 16px;
+  background:var(--cream2);border-bottom:1px solid rgba(92,61,30,.2);
+  align-items:center;flex-wrap:wrap;
+}
+.view-btn{
+  font-family:var(--f-ui);font-size:10px;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;
+  padding:5px 14px;border-radius:2px;cursor:pointer;
+  background:var(--cream3);border:1px solid rgba(92,61,30,.25);
+  color:var(--dust);transition:all .12s;
+}
+.view-btn.active{background:var(--forest);border-color:var(--forest);color:var(--cream)}
+.view-date-pick{
+  margin-left:auto;display:flex;align-items:center;gap:6px;
+}
+.view-date-pick input{
+  font-family:var(--f-ui);font-size:11px;
+  background:var(--cream);border:1px solid rgba(92,61,30,.3);
+  border-radius:2px;padding:4px 8px;color:var(--ink);
+  width:140px;
+}
+
+/* ── COUNTDOWN STRIP ─────────────────────────────────────────────────────── */
+.cd-strip{
+  display:flex;align-items:center;gap:16px;
+  padding:10px 16px;
+  background:var(--ink2);
+  border-bottom:1px solid var(--amber);
+  flex-wrap:wrap;
+}
+.cd-num{font-family:var(--f-head);font-size:1.8rem;font-weight:900;color:var(--amber3);line-height:1}
+.cd-lbl{font-family:var(--f-ui);font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--dust2)}
+.cd-txt{font-family:var(--f-body);font-style:italic;font-size:12px;color:var(--dust3)}
+.cd-gap{margin-left:auto;font-family:var(--f-ui);font-size:11px;color:var(--dust2)}
+.cd-gap b{color:var(--crimson3);font-size:15px}
+
+/* ── SUMMARY ROW ─────────────────────────────────────────────────────────── */
+.sum-row{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  border-bottom:1px solid rgba(92,61,30,.2);
+  background:var(--cream2);
+}
+.sum-blk{padding:10px 14px;border-right:1px solid rgba(92,61,30,.15)}
 .sum-blk:last-child{border-right:none}
-.sum-lbl{font-family:var(--fo);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
-.sum-val{font-family:var(--fd);font-size:18px;font-weight:900;color:var(--ink);line-height:1}
-.sum-sub{font-size:10px;color:var(--muted);margin-top:2px}
-.lbt{width:100%;border-collapse:collapse}
-.lbt th{font-family:var(--fo);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:7px 10px;text-align:left;border-bottom:1px solid var(--border2);background:var(--parch2)}
-.lbt th.r{text-align:right}
-.lbt td{padding:10px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
-.lbt tr:last-child td{border-bottom:none}
-.lbt tr:hover td{background:rgba(200,160,40,.07)}
-.lbt tr.top-row td{background:rgba(180,134,11,.07)}
-.rk{font-family:var(--fd);font-size:15px;font-weight:900;width:36px}
-.rk.gold{color:var(--gold)}.rk.silver{color:#888}.rk.bronze{color:var(--brown)}.rk.rest{color:var(--muted);font-size:12px}
-.tnc{font-family:var(--fo);font-size:15px;font-weight:700;color:var(--ink2)}
-.barc{width:100px}
-.mb{height:5px;background:var(--parch3);border-radius:2px;border:1px solid var(--border);overflow:hidden}
-.mbf{height:100%;background:linear-gradient(90deg,var(--red2),var(--red3));border-radius:2px;transition:width .5s cubic-bezier(.4,0,.2,1)}
-.totc{font-family:var(--fd);font-size:18px;font-weight:900;color:var(--ink);text-align:right}
-.deltc{font-family:var(--fo);font-size:11px;text-align:right;color:var(--muted)}
-.plt{width:100%;border-collapse:collapse}
-.plt th{font-family:var(--fo);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:6px 8px;border-bottom:1px solid var(--border2);background:var(--parch2);text-align:left}
-.plt td{padding:8px 8px;border-bottom:1px solid var(--border);vertical-align:middle}
-.plt tr:last-child td{border-bottom:none}
-.plt tr:hover td{background:rgba(200,160,40,.06)}
-.pnum{font-family:var(--fo);font-size:11px;color:var(--muted);width:20px}
-.pnm{font-family:var(--fo);font-size:13px;font-weight:700;color:var(--ink2)}
-.psub{font-size:10px;color:var(--muted)}
-.pft{font-size:10px;color:var(--red2);font-weight:600}
-.ppos{font-family:var(--fo);font-size:9px;font-weight:700;background:var(--green);color:var(--parch);padding:1px 5px;border-radius:2px}
-.pst{font-family:var(--fd);font-size:16px;font-weight:900;color:var(--red);text-align:right}
-.sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px}
-.sc-card{background:var(--parch2);border:1px solid var(--border2);border-radius:2px;padding:9px 11px}
-.sc-st{font-family:var(--fo);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px;color:var(--muted)}
-.sc-st.live{color:#1d7a38}.sc-st.final{color:var(--muted2)}
-.sc-row{display:flex;align-items:center;justify-content:space-between;padding:2px 0}
-.sc-tm{font-family:var(--fo);font-size:13px;font-weight:700;color:var(--ink2)}
-.sc-v{font-family:var(--fd);font-size:17px;font-weight:900;color:var(--ink2)}
-.sc-v.w{color:var(--red2)}
-.sc-div{border:none;border-top:1px solid var(--border);margin:3px 0}
-.ni{padding:9px 14px;border-bottom:1px solid var(--border);display:flex;gap:10px}
-.ni:last-child{border-bottom:none}
-.ni-dot{width:4px;height:4px;border-radius:50%;background:var(--red2);margin-top:7px;flex-shrink:0}
-.ni-t{font-size:12px;color:var(--ink2);line-height:1.35;font-family:var(--fb)}
-.ni-t a{color:inherit;text-decoration:none}
-.ni-t a:hover{color:var(--red)}
-.ni-d{font-size:10px;color:var(--muted);margin-top:2px;font-family:var(--fo)}
-.dgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.dig-c{background:var(--parch2);border:1px solid var(--border2);border-left:3px solid var(--red);border-radius:0 2px 2px 0;padding:9px 11px}
-.dig-l{font-family:var(--fo);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
-.dig-p{font-family:var(--fo);font-size:13px;font-weight:700;color:var(--ink2)}
-.dig-v{font-family:var(--fd);font-size:22px;font-weight:900;color:var(--red);line-height:1}
-.dig-t{font-size:10px;color:var(--muted)}
-.chirp-form{padding:11px 14px;background:var(--parch2);border-bottom:1px solid var(--border2);display:flex;flex-direction:column;gap:7px}
-.chirp-inputs{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.chirp-item{padding:9px 14px;border-bottom:1px solid var(--border)}
+.sum-lbl{font-family:var(--f-ui);font-size:8px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--dust);margin-bottom:2px}
+.sum-val{font-family:var(--f-head);font-size:1.4rem;font-weight:900;color:var(--ink);line-height:1}
+.sum-sub{font-size:10px;color:var(--dust);margin-top:1px}
+
+/* ── LEADERBOARD TABLE ───────────────────────────────────────────────────── */
+.lb-table{width:100%;border-collapse:collapse}
+.lb-table th{
+  font-family:var(--f-ui);font-size:8px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--dust);padding:8px 12px;
+  text-align:left;border-bottom:1px solid rgba(92,61,30,.2);
+  background:var(--cream2);
+}
+.lb-table th.r{text-align:right}
+.lb-table td{padding:11px 12px;border-bottom:1px solid rgba(92,61,30,.12);vertical-align:middle}
+.lb-table tr:last-child td{border-bottom:none}
+.lb-table tr:hover td{background:rgba(184,130,10,.06)}
+.lb-table tr.first td{background:rgba(240,184,48,.07)}
+.rank{font-family:var(--f-head);font-size:1.1rem;font-weight:900;width:36px}
+.rank.r1{color:var(--amber)}.rank.r2{color:#999}.rank.r3{color:var(--dust2)}.rank.rx{color:var(--dust);font-size:.85rem}
+.team-name{font-family:var(--f-ui);font-size:14px;font-weight:600;color:var(--ink2)}
+.bar-cell{width:90px}
+.bar-bg{height:5px;background:var(--cream3);border-radius:2px;overflow:hidden;border:1px solid rgba(92,61,30,.15)}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--crimson),var(--crimson3));border-radius:2px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.total-cell{font-family:var(--f-head);font-size:1.2rem;font-weight:900;color:var(--ink);text-align:right}
+.gap-cell{font-family:var(--f-ui);font-size:10px;text-align:right;color:var(--dust)}
+.empty-row{text-align:center;padding:24px;color:var(--dust);font-family:var(--f-body);font-style:italic;font-size:13px}
+
+/* ── MLB SCORES ──────────────────────────────────────────────────────────── */
+.scores-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+.score-card{
+  background:var(--cream2);border:1px solid rgba(92,61,30,.2);
+  border-radius:2px;padding:10px 12px;
+}
+.score-status{
+  font-family:var(--f-ui);font-size:8px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;
+  margin-bottom:8px;color:var(--dust);
+}
+.score-status.live{color:#1d7a38}.score-status.final{color:var(--dust2)}
+.score-row{display:flex;align-items:center;justify-content:space-between;padding:2px 0}
+.score-team{font-family:var(--f-ui);font-size:13px;font-weight:700;color:var(--ink2)}
+.score-val{font-family:var(--f-head);font-size:1.1rem;font-weight:900;color:var(--ink2)}
+.score-val.win{color:var(--crimson2)}
+.score-div{border:none;border-top:1px solid rgba(92,61,30,.15);margin:3px 0}
+
+/* ── MLB LEADERS ─────────────────────────────────────────────────────────── */
+.leader-tabs{display:flex;gap:4px;padding:10px 16px;background:var(--cream2);border-bottom:1px solid rgba(92,61,30,.2);flex-wrap:wrap}
+.ltab{
+  font-family:var(--f-ui);font-size:9px;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;
+  padding:4px 12px;border-radius:2px;cursor:pointer;
+  background:var(--cream3);border:1px solid rgba(92,61,30,.22);
+  color:var(--dust);transition:all .12s;
+}
+.ltab:hover{background:var(--cream4)}
+.ltab.active{background:var(--forest);border-color:var(--forest);color:var(--cream)}
+.leader-table{width:100%;border-collapse:collapse}
+.leader-table td{padding:9px 12px;border-bottom:1px solid rgba(92,61,30,.1);vertical-align:middle}
+.leader-table tr:last-child td{border-bottom:none}
+.leader-table tr:hover td{background:rgba(184,130,10,.05)}
+.l-rank{font-family:var(--f-ui);font-size:10px;color:var(--dust);width:24px}
+.l-name{font-family:var(--f-ui);font-size:13px;font-weight:600;color:var(--ink2)}
+.l-team{font-size:10px;color:var(--dust)}
+.l-val{font-family:var(--f-head);font-size:1.1rem;font-weight:900;color:var(--crimson);text-align:right}
+
+/* ── NEWS ────────────────────────────────────────────────────────────────── */
+.news-item{padding:10px 16px;border-bottom:1px solid rgba(92,61,30,.1);display:flex;gap:10px}
+.news-item:last-child{border-bottom:none}
+.news-dot{width:4px;height:4px;border-radius:50%;background:var(--crimson2);margin-top:8px;flex-shrink:0}
+.news-title{font-size:12px;color:var(--ink2);line-height:1.35;font-family:var(--f-body)}
+.news-title a{color:inherit;text-decoration:none}
+.news-title a:hover{color:var(--crimson)}
+.news-date{font-size:10px;color:var(--dust);margin-top:2px;font-family:var(--f-ui)}
+
+/* ── CHIRP WALL ──────────────────────────────────────────────────────────── */
+.chirp-form{padding:12px 16px;background:var(--cream2);border-bottom:1px solid rgba(92,61,30,.2);display:flex;flex-direction:column;gap:8px}
+.chirp-inputs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.chirp-item{padding:10px 16px;border-bottom:1px solid rgba(92,61,30,.1)}
 .chirp-item:last-child{border-bottom:none}
-.chirp-hd{display:flex;align-items:center;gap:8px;margin-bottom:3px}
-.chirp-auth{font-family:var(--fo);font-size:13px;font-weight:700;color:var(--ink2)}
-.chirp-team{font-size:11px;color:var(--red2);font-weight:600}
-.chirp-time{font-size:10px;color:var(--muted);margin-left:auto;font-family:var(--fo)}
-.chirp-msg{font-size:13px;color:var(--ink2);line-height:1.45;font-family:var(--fb)}
-.chirp-empty{text-align:center;padding:20px;color:var(--muted);font-size:13px;font-style:italic;font-family:var(--fb)}
-.sbot-strip{background:var(--ink2);border-top:1px solid var(--gold);padding:6px 14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.sbot-lbl{font-family:var(--fo);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2)}
-.sbot-v{font-family:var(--fo);font-size:10px;color:var(--parch3)}
-.sbot-v.ok{color:#28b84a}.sbot-v.wait{color:var(--gold3)}
-.rusty-stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.rst{background:var(--parch2);border:1px solid var(--border);border-radius:2px;padding:8px;text-align:center}
-.rst .rv{font-family:var(--fd);font-size:20px;font-weight:900;color:var(--red)}
-.rst .rl{font-family:var(--fo);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-.admin-wrap{display:none}
-.admin-wrap.visible{display:block}
-.adm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:7px;margin-bottom:10px}
-.adm-item{display:flex;align-items:center;gap:8px;background:var(--parch2);border:1px solid var(--border);border-radius:2px;padding:7px 10px}
-.adm-item .an{flex:1;font-family:var(--fo);font-size:13px;font-weight:600;color:var(--ink2)}
-.adm-item .ac{font-size:11px;color:var(--muted);white-space:nowrap}
-.alert-box{border-radius:2px;padding:8px 12px;font-size:12px;margin-bottom:10px;display:none;font-family:var(--fb);font-style:italic}
-.alert-box.ok{background:rgba(29,122,56,.1);border:1px solid rgba(29,122,56,.3);color:#1d7a38}
-.alert-box.err{background:rgba(139,26,26,.08);border:1px solid rgba(139,26,26,.3);color:var(--red2)}
-input[type=text],input[type=number],input[type=password],select,textarea{background:var(--parch3);border:1px solid var(--border2);border-radius:2px;padding:7px 10px;font-family:var(--fb);font-size:13px;color:var(--ink);outline:none;width:100%;transition:border-color .14s}
-input:focus,select:focus,textarea:focus{border-color:var(--red)}
-textarea{resize:vertical;min-height:65px}
-.btn{display:inline-flex;align-items:center;gap:5px;background:var(--parch3);border:1px solid var(--border2);border-radius:2px;color:var(--ink2);font-family:var(--fo);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:7px 14px;cursor:pointer;transition:all .13s;white-space:nowrap}
-.btn:hover{background:var(--parch4)}
-.btn-r{background:var(--red);border-color:var(--red);color:#fff}
-.btn-r:hover{background:var(--red2)}
-.btn-g{background:var(--gold);border-color:var(--gold);color:var(--ink)}
-.btn-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}
-.sort-btn{font-family:var(--fo);font-size:9px;font-weight:700;color:var(--parch3);letter-spacing:.06em;background:transparent;border:1px solid rgba(255,255,255,.25);border-radius:2px;padding:3px 8px;cursor:pointer;transition:all .13s}
-.sort-btn:hover{border-color:var(--gold);color:var(--gold3)}
-.loading{text-align:center;padding:18px;color:var(--muted);font-family:var(--fs);font-size:12px}
-.site-footer{background:var(--ink);border-top:3px solid var(--gold);padding:20px;text-align:center}
-.site-footer p{font-family:var(--fb);font-style:italic;font-size:12px;color:var(--muted2)}
-.site-footer strong{color:var(--gold2);font-style:normal}
-::-webkit-scrollbar{width:6px;height:6px}
-::-webkit-scrollbar-track{background:var(--parch2)}
-::-webkit-scrollbar-thumb{background:var(--parch4);border-radius:3px}
+.chirp-meta{display:flex;align-items:center;gap:8px;margin-bottom:3px}
+.chirp-author{font-family:var(--f-ui);font-size:13px;font-weight:700;color:var(--ink2)}
+.chirp-team{font-size:10px;color:var(--crimson2);font-weight:600}
+.chirp-time{font-size:10px;color:var(--dust);margin-left:auto;font-family:var(--f-ui)}
+.chirp-msg{font-size:13px;color:var(--ink2);line-height:1.45;font-family:var(--f-body)}
+.chirp-empty{text-align:center;padding:24px;color:var(--dust);font-size:13px;font-style:italic;font-family:var(--f-body)}
+
+/* ── RUSTY SIDEBAR ───────────────────────────────────────────────────────── */
+.rusty-photo{width:100%;aspect-ratio:4/3;object-fit:cover;object-position:top;display:block;filter:sepia(20%) contrast(1.05)}
+.rusty-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px}
+.rusty-stat{background:var(--cream2);border:1px solid rgba(92,61,30,.15);border-radius:2px;padding:8px;text-align:center}
+.rusty-stat .rv{font-family:var(--f-head);font-size:1.3rem;font-weight:900;color:var(--crimson)}
+.rusty-stat .rl{font-family:var(--f-ui);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--dust)}
+
+/* ── ADMIN PANEL ─────────────────────────────────────────────────────────── */
+.admin-lock{
+  min-height:60vh;display:flex;align-items:center;justify-content:center;
+  padding:40px 20px;
+}
+.lock-box{
+  background:var(--cream);border:1px solid rgba(92,61,30,.3);
+  border-radius:var(--r);padding:40px;
+  text-align:center;max-width:360px;width:100%;
+  box-shadow:var(--shadow-lg);
+}
+.lock-icon{font-size:48px;margin-bottom:16px}
+.lock-title{font-family:var(--f-head);font-size:1.6rem;font-weight:900;color:var(--ink);margin-bottom:6px}
+.lock-sub{font-family:var(--f-body);font-style:italic;font-size:13px;color:var(--dust);margin-bottom:20px}
+
+/* ADMIN GRID */
+.adm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;margin-bottom:14px}
+.adm-item{
+  display:flex;align-items:center;gap:10px;
+  background:var(--cream2);border:1px solid rgba(92,61,30,.2);
+  border-radius:2px;padding:8px 12px;
+}
+.adm-name{flex:1;font-family:var(--f-ui);font-size:13px;font-weight:600;color:var(--ink2)}
+.adm-saved{font-size:10px;white-space:nowrap;min-width:52px;text-align:right;font-family:var(--f-ui)}
+.adm-saved.has{color:var(--forest3);font-weight:700}
+.adm-saved.none{color:var(--dust)}
+.adm-item input[type=number]{width:80px;text-align:center}
+
+/* CALENDAR */
+.cal-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(90px,1fr));
+  gap:6px;
+  max-height:300px;overflow-y:auto;
+  padding:4px;
+}
+.cal-date{
+  background:var(--cream2);border:1px solid rgba(92,61,30,.2);
+  border-radius:2px;padding:8px;text-align:center;cursor:pointer;
+  transition:all .12s;
+}
+.cal-date:hover{background:var(--cream3);border-color:rgba(92,61,30,.4)}
+.cal-date.saved{border-color:var(--forest3);background:rgba(46,102,72,.08)}
+.cal-date.selected{background:var(--forest);border-color:var(--forest);color:var(--cream)}
+.cal-date .cd-d{font-family:var(--f-head);font-size:1.2rem;font-weight:900;line-height:1}
+.cal-date .cd-m{font-family:var(--f-ui);font-size:8px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--dust);margin-top:2px}
+.cal-date.saved .cd-m{color:var(--forest3)}
+.cal-date.selected .cd-m{color:var(--cream2)}
+
+/* ALERT */
+.alert{border-radius:2px;padding:10px 14px;font-size:13px;margin-bottom:12px;display:none;font-family:var(--f-body);font-style:italic}
+.alert.ok{background:rgba(46,102,72,.1);border:1px solid rgba(46,102,72,.3);color:var(--forest3)}
+.alert.err{background:rgba(139,26,26,.08);border:1px solid rgba(139,26,26,.3);color:var(--crimson)}
+
+/* ── INPUTS / BUTTONS ────────────────────────────────────────────────────── */
+input,select,textarea{
+  background:var(--cream2);border:1px solid rgba(92,61,30,.3);
+  border-radius:2px;padding:8px 12px;
+  font-family:var(--f-body);font-size:13px;color:var(--ink);
+  outline:none;width:100%;transition:border-color .14s;
+}
+input:focus,select:focus,textarea:focus{border-color:var(--crimson)}
+textarea{resize:vertical;min-height:64px}
+
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--cream3);border:1px solid rgba(92,61,30,.3);
+  border-radius:2px;color:var(--ink2);
+  font-family:var(--f-ui);font-size:11px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;
+  padding:9px 18px;cursor:pointer;transition:all .13s;white-space:nowrap;
+}
+.btn:hover{background:var(--cream4)}
+.btn-primary{background:var(--crimson);border-color:var(--crimson);color:#fff}
+.btn-primary:hover{background:var(--crimson2)}
+.btn-green{background:var(--forest2);border-color:var(--forest2);color:var(--cream)}
+.btn-green:hover{background:var(--forest3)}
+.btn-gold{background:var(--amber);border-color:var(--amber);color:var(--ink)}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+
+.loading-state{text-align:center;padding:24px;color:var(--dust);font-family:var(--f-body);font-style:italic;font-size:13px}
+
+/* ── FOOTER ──────────────────────────────────────────────────────────────── */
+.site-footer{background:var(--ink);border-top:3px solid var(--amber);padding:24px;text-align:center}
+.site-footer p{font-family:var(--f-body);font-style:italic;font-size:12px;color:var(--dust2);line-height:1.8}
+.site-footer strong{color:var(--amber2);font-style:normal}
+
+/* ── SCROLLBAR ───────────────────────────────────────────────────────────── */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--cream2)}
+::-webkit-scrollbar-thumb{background:var(--cream4);border-radius:3px}
 </style>
 </head>
 <body>
 
+<!-- TICKER -->
 <div class="ticker">
-  <div class="ticker-tag">⚾ RKTL Live</div>
+  <div class="ticker-label">⚾ RKTL</div>
   <div class="ticker-scroll">
     <div class="ticker-track" id="ticker-track">
-      <span class="ti">Loading league data...</span>
-      <span class="ti">Loading league data...</span>
+      <span class="tick">Loading league data...</span>
+      <span class="tick">Loading league data...</span>
     </div>
   </div>
 </div>
 
 <div class="page">
-<div class="hero">
-  <div class="hero-inner">
-    <div class="hero-left">
-      <div class="league-eyebrow">Current Leader</div>
-      <div class="hero-stat-big" id="hero-leader">—</div>
-      <div class="hero-stat-label" id="hero-leader-cat">RBI Race · Mar/Apr</div>
-      <div class="hero-stat-sub" id="hero-leader-sub"></div>
-    </div>
-    <div class="hero-center">
-      <div class="logo-diamond">
-        <div class="logo-rule"></div>
-        <div class="logo-est">Est. 2021 · Dynasty Baseball</div>
-        <div class="logo-title">
-          <span class="rusty">Rusty</span>
-          <span class="kuntz">Kuntz</span>
-          <span style="font-size:55%;color:var(--parch2);display:block;letter-spacing:.08em">Dynasty League</span>
-        </div>
-        <div class="rusty-frame">
-          <img src="https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_213,q_auto:best/v1/people/117366/headshot/67/current" alt="Rusty Kuntz" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
-          <div class="rusty-fallback" style="display:none">⚾</div>
-          <div class="rusty-frame-label">Rusty Kuntz · OF · 1979–85</div>
-        </div>
-        <div class="logo-subtitle" style="margin-top:6px">Named for Russell Jay Kuntz<br>World Series Champion · 1984</div>
-        <div class="logo-rule" style="margin-top:8px"></div>
-        <div class="seanbot-credit"><div class="sbot-dot"></div>Powered by SeanBot 1.0</div>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-eyebrow">Est. 2021 · Dynasty Baseball · 14 Teams</div>
+    <div class="site-name"><em>Rusty</em> Kuntz<br>Dynasty League</div>
+    <div class="site-tagline">Named for Russell Jay Kuntz · World Series Champion · 1984</div>
+    <div class="header-stats">
+      <div class="hstat">
+        <div class="hstat-val" id="hero-leader-val">—</div>
+        <div class="hstat-lbl" id="hero-leader-lbl">RBI Leader</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-val" id="hero-leader-total">0</div>
+        <div class="hstat-lbl">Total</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-val" id="hero-days">—</div>
+        <div class="hstat-lbl" id="hero-days-lbl">Days Left</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-val" id="hero-games">—</div>
+        <div class="hstat-lbl">Games Today</div>
       </div>
     </div>
-    <div class="hero-right">
-      <div class="league-eyebrow" style="justify-content:flex-end">Prize Countdown</div>
-      <div class="hero-stat-big"><span class="accent" id="hero-days">—</span></div>
-      <div class="hero-stat-label" id="hero-cd-label">days remaining</div>
-      <div class="hero-stat-sub" id="hero-period-lbl"></div>
+  </div>
+</header>
+
+<!-- QUOTE -->
+<div class="quote-strip">
+  <div class="quote-text"><span class="qm">"</span><span id="q-body">Loading...</span><span class="qm">"</span></div>
+  <div class="quote-author" id="q-author"></div>
+</div>
+
+<!-- NAV -->
+<nav class="nav-tabs">
+  <button class="nav-tab active" onclick="showTab('standings',this)">🏆 Standings</button>
+  <button class="nav-tab" onclick="showTab('scores',this)">⚾ Scores</button>
+  <button class="nav-tab" onclick="showTab('leaders',this)">📊 MLB Leaders</button>
+  <button class="nav-tab" onclick="showTab('news',this)">📰 News</button>
+  <button class="nav-tab" onclick="showTab('chirps',this)">🗣 Chirp Wall</button>
+  <button class="nav-tab" onclick="showTab('rusty',this)">🏟 The Legend</button>
+  <button class="nav-tab" onclick="showTab('admin',this)" id="admin-tab" style="display:none">🔐 Admin</button>
+</nav>
+
+<!-- ── TAB: STANDINGS ──────────────────────────────────────────────────────── -->
+<div class="tab-pane active" id="tab-standings">
+<div class="wrap">
+<div class="two-col">
+<div>
+  <div class="sec">Monthly Prize Race</div>
+  <div class="card">
+    <div class="card-head">
+      <h2>2026 Standings</h2>
+      <span class="pill pill-gold" id="cat-pill">RBI</span>
     </div>
+    <div class="cat-bar">
+      <button class="cat-btn active" onclick="selectCat(0,this)">RBI<small>Mar/Apr</small></button>
+      <button class="cat-btn" onclick="selectCat(1,this)">K's<small>May</small></button>
+      <button class="cat-btn" onclick="selectCat(2,this)">Hits<small>June</small></button>
+      <button class="cat-btn" onclick="selectCat(3,this)">SB<small>July</small></button>
+      <button class="cat-btn" onclick="selectCat(4,this)">HR<small>Aug</small></button>
+      <button class="cat-btn" onclick="selectCat(5,this)">Single-Day<small>Sept</small></button>
+    </div>
+    <div class="view-toggle">
+      <button class="view-btn active" id="vbtn-monthly" onclick="setView('monthly',this)">Monthly Total</button>
+      <button class="view-btn" id="vbtn-daily" onclick="setView('daily',this)">Single Day</button>
+      <div class="view-date-pick" id="daily-date-pick" style="display:none">
+        <input type="date" id="daily-date" onchange="loadDailyView()"/>
+      </div>
+    </div>
+    <div class="cd-strip">
+      <span>
+        <div class="cd-num" id="cd-num">—</div>
+        <div class="cd-lbl" id="cd-lbl">Period Ends In</div>
+      </span>
+      <span class="cd-txt" id="cd-txt">days</span>
+      <div class="cd-gap">Gap to 2nd: <b id="cd-gap">—</b></div>
+    </div>
+    <div class="sum-row">
+      <div class="sum-blk"><div class="sum-lbl">Leader</div><div class="sum-val" id="sum-leader" style="font-size:1rem;padding-top:4px">—</div></div>
+      <div class="sum-blk"><div class="sum-lbl">Total</div><div class="sum-val" id="sum-total">0</div><div class="sum-sub" id="sum-cat">RBI</div></div>
+      <div class="sum-blk"><div class="sum-lbl">Period</div><div class="sum-val" id="sum-period" style="font-size:.9rem;padding-top:4px">Mar/Apr</div></div>
+    </div>
+    <table class="lb-table">
+      <thead><tr>
+        <th style="width:38px">#</th>
+        <th>Team</th>
+        <th style="width:90px">Bar</th>
+        <th class="r" style="width:60px">Total</th>
+        <th class="r" style="width:50px">Gap</th>
+      </tr></thead>
+      <tbody id="lb-body"><tr><td colspan="5" class="empty-row">Loading standings...</td></tr></tbody>
+    </table>
   </div>
 </div>
 
-<div class="quote-banner">
-  <div class="q-text" id="q-text"><span class="q-mark">"</span><span id="q-body">Loading...</span><span class="q-mark">"</span></div>
-  <div class="q-author" id="q-author"></div>
+<div>
+  <!-- RIGHT SIDE: today's scores mini widget on standings tab -->
+  <div class="sec">Today's Games</div>
+  <div class="card">
+    <div class="card-head"><h2 id="scores-mini-head">MLB Today</h2><span class="pill pill-green" id="scores-mini-pill">Live</span></div>
+    <div class="card-body">
+      <div class="scores-grid" id="scores-mini-grid"><div class="loading-state">Loading...</div></div>
+    </div>
+  </div>
+
+  <div class="sec">MLB League Leaders</div>
+  <div class="card">
+    <div class="card-head"><h2 id="leaders-mini-title">Home Run Leaders</h2><span class="pill pill-green">MLB.com</span></div>
+    <div class="leader-tabs" id="leaders-mini-tabs">
+      <button class="ltab active" onclick="loadLeaders('homeRuns','Home Runs',this,'mini')">HR</button>
+      <button class="ltab" onclick="loadLeaders('rbi','RBI',this,'mini')">RBI</button>
+      <button class="ltab" onclick="loadLeaders('hits','Hits',this,'mini')">H</button>
+      <button class="ltab" onclick="loadLeaders('stolenBases','SB',this,'mini')">SB</button>
+      <button class="ltab" onclick="loadLeaders('strikeOuts','K',this,'mini')">K</button>
+      <button class="ltab" onclick="loadLeaders('battingAverage','AVG',this,'mini')">AVG</button>
+    </div>
+    <table class="leader-table" id="leaders-mini-body">
+      <tbody><tr><td class="loading-state" colspan="3">Loading...</td></tr></tbody>
+    </table>
+  </div>
+</div>
+</div><!-- /two-col -->
+</div>
 </div>
 
-<div class="content-wrap">
-  <div>
-    <div class="sec-label">Monthly Prize Race</div>
-    <div class="card">
-      <div class="card-head">
-        <h2>2026 Standings</h2>
-        <div class="ch-r">
-          <button class="sort-btn" onclick="toggleSort()">⇅ Sort</button>
-          <span class="pill pg" id="cat-badge">RBI</span>
-        </div>
+<!-- ── TAB: SCORES ─────────────────────────────────────────────────────────── -->
+<div class="tab-pane" id="tab-scores">
+<div class="wrap">
+  <div class="sec">Today's MLB Games</div>
+  <div class="card">
+    <div class="card-head"><h2 id="scores-head">MLB Scoreboard</h2><span class="pill pill-green" id="scores-pill">Live</span></div>
+    <div class="card-body">
+      <div class="scores-grid" id="scores-grid"><div class="loading-state">Loading scores...</div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ── TAB: LEADERS ────────────────────────────────────────────────────────── -->
+<div class="tab-pane" id="tab-leaders">
+<div class="wrap">
+  <div class="sec">MLB Season Leaders</div>
+  <div class="card">
+    <div class="card-head"><h2 id="leaders-title">Home Run Leaders</h2><span class="pill pill-green">MLB.com Live</span></div>
+    <div class="leader-tabs">
+      <button class="ltab active" onclick="loadLeaders('homeRuns','Home Runs',this,'main')">Home Runs</button>
+      <button class="ltab" onclick="loadLeaders('rbi','RBI',this,'main')">RBI</button>
+      <button class="ltab" onclick="loadLeaders('hits','Hits',this,'main')">Hits</button>
+      <button class="ltab" onclick="loadLeaders('stolenBases','Stolen Bases',this,'main')">Stolen Bases</button>
+      <button class="ltab" onclick="loadLeaders('strikeOuts','Strikeouts',this,'main')">Strikeouts (P)</button>
+      <button class="ltab" onclick="loadLeaders('battingAverage','Batting Average',this,'main')">AVG</button>
+      <button class="ltab" onclick="loadLeaders('era','ERA',this,'main')">ERA</button>
+      <button class="ltab" onclick="loadLeaders('wins','Wins',this,'main')">Wins (P)</button>
+    </div>
+    <table class="leader-table">
+      <thead><tr>
+        <th style="width:30px">#</th><th>Player</th><th style="text-align:right;width:60px" id="leaders-stat-head">HR</th>
+      </tr></thead>
+      <tbody id="leaders-body"><tr><td colspan="3" class="loading-state">Loading...</td></tr></tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- ── TAB: NEWS ───────────────────────────────────────────────────────────── -->
+<div class="tab-pane" id="tab-news">
+<div class="wrap">
+  <div class="sec">MLB Headlines</div>
+  <div class="card">
+    <div class="card-head"><h2>MLB News</h2><span class="pill pill-green">Live Feed</span></div>
+    <div id="news-list"><div class="loading-state">Loading...</div></div>
+  </div>
+</div>
+</div>
+
+<!-- ── TAB: CHIRPS ─────────────────────────────────────────────────────────── -->
+<div class="tab-pane" id="tab-chirps">
+<div class="wrap">
+  <div class="sec">Trash Talk</div>
+  <div class="card">
+    <div class="card-head"><h2>Chirp Wall 🗣</h2><span class="pill pill-red">No Mercy</span></div>
+    <div class="chirp-form">
+      <div class="chirp-inputs">
+        <input type="text" id="c-auth" placeholder="Your name..." maxlength="40"/>
+        <select id="c-team">
+          <option value="">Your team...</option>
+          <option>Possibilities</option><option>Yoshi's Islanders</option>
+          <option>thebigfur</option><option>Red Birds</option>
+          <option>Daddy Yankee</option><option>¡pinto!</option>
+          <option>JoanMacias</option><option>Xavier</option>
+          <option>Los Jankees</option><option>Momin8421</option>
+          <option>ericliaci</option><option>Sho Me The Money</option>
+          <option>Designated Shitters</option><option>Arraezed & Hoerny</option>
+        </select>
       </div>
-      <div class="cat-bar">
-        <button class="cat-btn active" onclick="selectCat(0,this)">RBI<span class="mo">Mar/Apr</span></button>
-        <button class="cat-btn" onclick="selectCat(1,this)">K's<span class="mo">May</span></button>
-        <button class="cat-btn" onclick="selectCat(2,this)">Hits<span class="mo">June</span></button>
-        <button class="cat-btn" onclick="selectCat(3,this)">SB<span class="mo">July</span></button>
-        <button class="cat-btn" onclick="selectCat(4,this)">HR<span class="mo">Aug</span></button>
-        <button class="cat-btn" onclick="selectCat(5,this)">Single-Day<span class="mo">Sept</span></button>
+      <textarea id="c-msg" placeholder="Say something... 280 chars max" maxlength="280"></textarea>
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="btn btn-primary" onclick="postChirp()">Post Chirp</button>
+        <span id="c-count" style="font-family:var(--f-ui);font-size:11px;color:var(--dust)">280</span>
       </div>
-      <div class="cd-strip">
-        <span class="cd-lbl" id="cd-lbl">Period Ends In</span>
-        <span class="cd-num" id="cd-num">—</span>
-        <span class="cd-txt" id="cd-txt">days</span>
-        <div class="cd-gap">Gap: <span class="gv" id="cd-gap">—</span></div>
+    </div>
+    <div id="chirp-list"><div class="chirp-empty">No chirps yet. Start the trash talk.</div></div>
+  </div>
+</div>
+</div>
+
+<!-- ── TAB: RUSTY ──────────────────────────────────────────────────────────── -->
+<div class="tab-pane" id="tab-rusty">
+<div class="wrap">
+<div class="two-col">
+<div>
+  <div class="sec">The Legend</div>
+  <div class="card">
+    <div class="card-head"><h2>Russell "Rusty" Kuntz</h2><span class="pill pill-gold">OF · 1979–85</span></div>
+    <img class="rusty-photo"
+      src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Rusty_Kuntz_1983.jpg/440px-Rusty_Kuntz_1983.jpg"
+      alt="Rusty Kuntz"
+      onerror="this.src='https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_213,q_auto:best/v1/people/117366/headshot/67/current'"/>
+    <div class="card-body">
+      <p style="font-family:var(--f-body);font-style:italic;font-size:13px;color:var(--ink2);line-height:1.8;margin-bottom:14px">
+        Rusty Kuntz drove in the <strong>game-winning RBI</strong> in Game 5 of the 1984 World Series, helping the Detroit Tigers claim the championship. The best name in baseball history belongs to a genuine champion and baseball lifer. Manager Ned Yost called him "the best first base coach in baseball."
+      </p>
+      <div class="rusty-grid">
+        <div class="rusty-stat"><div class="rv">.286</div><div class="rl">1984 AVG</div></div>
+        <div class="rusty-stat"><div class="rv">1984</div><div class="rl">World Series</div></div>
+        <div class="rusty-stat"><div class="rv">296</div><div class="rl">Career Games</div></div>
+        <div class="rusty-stat"><div class="rv">#1</div><div class="rl">Best Name Ever</div></div>
       </div>
-      <div class="sum-row">
-        <div class="sum-blk"><div class="sum-lbl">Leader</div><div class="sum-val" id="sum-leader" style="font-size:14px;padding-top:3px">—</div></div>
-        <div class="sum-blk"><div class="sum-lbl">Total</div><div class="sum-val" id="sum-total">0</div><div class="sum-sub" id="sum-cat">RBI</div></div>
-        <div class="sum-blk"><div class="sum-lbl">Updated</div><div class="sum-val" id="sum-updated" style="font-size:11px;padding-top:4px">—</div><div class="sum-sub">by SeanBot 1.0</div></div>
-      </div>
-      <table class="lbt">
-        <thead><tr>
-          <th style="width:40px">#</th><th>Team</th>
-          <th style="width:100px">Progress</th>
-          <th class="r" style="width:65px">Total</th>
-          <th class="r" style="width:55px">+/−</th>
-        </tr></thead>
-        <tbody id="lb-body"><tr><td colspan="5" class="loading">Loading standings...</td></tr></tbody>
+    </div>
+  </div>
+</div>
+<div>
+  <div class="sec">About the League</div>
+  <div class="card">
+    <div class="card-head"><h2>2026 Prize Structure</h2><span class="pill pill-ink">14 Teams</span></div>
+    <div class="card-body">
+      <table style="width:100%;border-collapse:collapse;font-family:var(--f-ui);font-size:13px">
+        <tr style="border-bottom:1px solid rgba(92,61,30,.15)"><td style="padding:8px 0;color:var(--dust);font-size:10px;letter-spacing:.1em;text-transform:uppercase">Period</td><td style="padding:8px 0;color:var(--dust);font-size:10px;letter-spacing:.1em;text-transform:uppercase">Category</td></tr>
+        <tr style="border-bottom:1px solid rgba(92,61,30,.1)"><td style="padding:9px 0;font-weight:600;color:var(--ink2)">March / April</td><td style="padding:9px 0;color:var(--crimson2);font-weight:700">RBI</td></tr>
+        <tr style="border-bottom:1px solid rgba(92,61,30,.1)"><td style="padding:9px 0;font-weight:600;color:var(--ink2)">May</td><td style="padding:9px 0;color:var(--crimson2);font-weight:700">Strikeouts (P)</td></tr>
+        <tr style="border-bottom:1px solid rgba(92,61,30,.1)"><td style="padding:9px 0;font-weight:600;color:var(--ink2)">June</td><td style="padding:9px 0;color:var(--crimson2);font-weight:700">Hits</td></tr>
+        <tr style="border-bottom:1px solid rgba(92,61,30,.1)"><td style="padding:9px 0;font-weight:600;color:var(--ink2)">July</td><td style="padding:9px 0;color:var(--crimson2);font-weight:700">Stolen Bases</td></tr>
+        <tr style="border-bottom:1px solid rgba(92,61,30,.1)"><td style="padding:9px 0;font-weight:600;color:var(--ink2)">August</td><td style="padding:9px 0;color:var(--crimson2);font-weight:700">Home Runs</td></tr>
+        <tr><td style="padding:9px 0;font-weight:600;color:var(--ink2)">September</td><td style="padding:9px 0;color:var(--crimson2);font-weight:700">Single-Day High Score</td></tr>
       </table>
-      <div class="sbot-strip">
-        <span class="sbot-lbl">🤖 SeanBot 1.0</span>
-        <span class="sbot-v" id="sbot-st">Checking...</span>
-        <span class="sbot-lbl" style="margin-left:8px">Last sync</span>
-        <span class="sbot-v" id="sbot-sync">—</span>
-        <span class="sbot-lbl" style="margin-left:8px">Tonight</span>
-        <span class="sbot-v" id="sbot-games">—</span>
-      </div>
-    </div>
-
-    <div class="sec-label">Today's Top Performers</div>
-    <div class="card">
-      <div class="card-head">
-        <h2>Daily Digest</h2>
-        <div class="ch-r"><span class="pill pi">🤖 SeanBot</span><span class="pill pgreen">Starters Only</span></div>
-      </div>
-      <div class="card-body">
-        <div class="dgrid" id="digest-grid"><div class="loading" style="grid-column:1/-1">Loading...</div></div>
-      </div>
-    </div>
-
-    <div class="sec-label">Today's MLB Games</div>
-    <div class="card">
-      <div class="card-head">
-        <h2 id="scores-head">MLB Scores</h2>
-        <span class="pill pgreen">Live · 🤖 SeanBot</span>
-      </div>
-      <div class="card-body">
-        <div class="sgrid" id="scores-grid"><div class="loading">Loading scores...</div></div>
-      </div>
-    </div>
-
-    <div class="sec-label">Trash Talk</div>
-    <div class="card">
-      <div class="card-head">
-        <h2>Chirp Wall 🗣</h2>
-        <span class="pill pr">No Mercy</span>
-      </div>
-      <div class="chirp-form">
-        <div class="chirp-inputs">
-          <input type="text" id="c-auth" placeholder="Your name..." maxlength="40"/>
-          <select id="c-team">
-            <option value="">Your team...</option>
-            <option>Possibilities</option><option>Yoshi's Islanders</option>
-            <option>thebigfur</option><option>Red Birds</option>
-            <option>Daddy Yankee</option><option>¡pinto!</option>
-            <option>JoanMacias</option><option>Xavier</option>
-            <option>Los Jankees</option><option>Momin8241</option>
-            <option>ericliaci</option><option>Sho Me The Money</option>
-            <option>Designated Shitters</option><option>Arraezed &amp; Hoerny</option>
-          </select>
-        </div>
-        <textarea id="c-msg" placeholder="Say something... 280 chars max" maxlength="280"></textarea>
-        <div style="display:flex;align-items:center;gap:8px">
-          <button class="btn btn-r" onclick="postChirp()">Post Chirp</button>
-          <span id="c-count" style="font-size:11px;color:var(--muted);font-family:var(--fo)">280</span>
-        </div>
-      </div>
-      <div id="chirp-list"><div class="chirp-empty">No chirps yet. Start the trash talk.</div></div>
-    </div>
-  </div>
-
-  <div>
-    <div class="sec-label">Individual Leaders</div>
-    <div class="card">
-      <div class="card-head">
-        <h2 id="pl-title">Top Players — RBI</h2>
-        <span class="pill pgreen">Starters Only</span>
-      </div>
-      <table class="plt">
-        <thead><tr>
-          <th>#</th><th>Player</th><th style="text-align:right" id="pl-head">RBI</th>
-        </tr></thead>
-        <tbody id="pl-body"><tr><td colspan="3" class="loading">Loading...</td></tr></tbody>
-      </table>
-    </div>
-
-    <div class="sec-label">MLB Headlines</div>
-    <div class="card">
-      <div class="card-head"><h2>MLB News</h2><span class="pill pgreen">Live Feed</span></div>
-      <div id="news-list"><div class="loading">Loading...</div></div>
-    </div>
-
-    <div class="sec-label">The Legend</div>
-    <div class="card">
-      <div class="card-head"><h2>Russell "Rusty" Kuntz</h2><span class="pill pg">OF · 1979–85</span></div>
-      <div class="card-body">
-        <p style="font-family:var(--fb);font-style:italic;font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:10px">
-          Rusty Kuntz drove in the <strong>game-winning RBI</strong> in Game 5 of the 1984 World Series. The best name in baseball history belongs to a genuine champion. Ned Yost called him "the best first base coach in baseball."
-        </p>
-        <div class="rusty-stats-grid">
-          <div class="rst"><div class="rv">.286</div><div class="rl">1984 AVG</div></div>
-          <div class="rst"><div class="rv">1984</div><div class="rl">World Series</div></div>
-          <div class="rst"><div class="rv">296</div><div class="rl">Career Games</div></div>
-          <div class="rst"><div class="rv">#1</div><div class="rl">Best Name Ever</div></div>
-        </div>
-      </div>
     </div>
   </div>
 </div>
-
-<!-- ADMIN -->
-<div class="admin-wrap" id="admin-wrap">
-  <div style="max-width:1240px;margin:0 auto;padding:0 16px 40px">
-    <div class="sec-label">Commissioner Panel</div>
-    <div class="card">
-      <div class="card-head"><h2>🤖 SeanBot Admin</h2><span class="pill pr">Commissioner Only</span></div>
-      <div class="card-body">
-        <div class="alert-box" id="admin-alert"></div>
-
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;align-items:flex-end">
-          <div>
-            <div style="font-family:var(--fo);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Password</div>
-            <input type="password" id="admin-secret" placeholder="Admin password..." style="width:180px"/>
-          </div>
-          <div>
-            <div style="font-family:var(--fo);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Category</div>
-            <select id="entry-stat" style="width:200px" onchange="loadEntryGrid()">
-              <option value="rbi">RBI (Mar / Apr)</option>
-              <option value="strikeouts">Strikeouts (May)</option>
-              <option value="hits">Hits (June)</option>
-              <option value="stolen_bases">Stolen Bases (July)</option>
-              <option value="home_runs">Home Runs (Aug)</option>
-            </select>
-          </div>
-        </div>
-
-        <div style="background:var(--parch2);border:1px solid var(--border);border-left:3px solid var(--gold);padding:8px 12px;margin-bottom:12px;font-size:11px;color:var(--ink2);font-family:var(--fb);font-style:italic">
-          Enter each team's RBI total for the day — leave blank to skip. Each save <strong>adds</strong> to the running monthly total.
-        </div>
-
-        <div class="adm-grid" id="entry-grid"></div>
-
-        <div class="btn-row">
-          <button class="btn btn-r" onclick="saveStats()">💾 Add to Monthly Total</button>
-        </div>
-        <div id="entry-status" style="font-size:11px;font-family:var(--fb);font-style:italic;color:var(--muted);min-height:18px"></div>
-
-        <div style="font-family:var(--fo);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 8px;border-top:1px solid var(--border2);padding-top:14px">September Single-Day Score</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px">
-          <select id="sept-team" style="width:220px">
-            <option value="">Select team...</option>
-            <option>Possibilities</option><option>Yoshi’s Islanders</option><option>thebigfur</option>
-            <option>Red Birds</option><option>Daddy Yankee</option><option>¡pinto!</option>
-            <option>JoanMacias</option><option>Xavier</option><option>Los Jankees</option>
-            <option>Momin8421</option><option>ericliaci</option><option>Sho Me The Money</option>
-            <option>Designated Shitters</option><option>Arraezed &amp; Hoerny</option>
-          </select>
-          <input type="number" id="sept-score" placeholder="Score" style="width:100px"/>
-          <button class="btn btn-g" onclick="saveSeptScore()">Save</button>
-        </div>
-        <p style="font-size:11px;font-style:italic;color:var(--muted);font-family:var(--fb)">Only stat logged manually — enter the highest single-day fantasy score each day in September.</p>
-      </div>
 </div>
+</div>
+</div>
+
+<!-- ── TAB: ADMIN ──────────────────────────────────────────────────────────── -->
+<div class="tab-pane" id="tab-admin">
+<div class="wrap">
+
+  <!-- LOCK SCREEN -->
+  <div class="admin-lock" id="admin-lock">
+    <div class="lock-box">
+      <div class="lock-icon">🔐</div>
+      <div class="lock-title">Commissioner Panel</div>
+      <div class="lock-sub">Enter your password to access the daily stat entry tool.</div>
+      <input type="password" id="admin-pw" placeholder="Password..." style="margin-bottom:12px" onkeydown="if(event.key==='Enter')unlockAdmin()"/>
+      <button class="btn btn-primary" style="width:100%" onclick="unlockAdmin()">Unlock</button>
+      <div id="lock-err" style="color:var(--crimson);font-size:12px;margin-top:10px;display:none">Incorrect password.</div>
+    </div>
+  </div>
+
+  <!-- ADMIN CONTENT -->
+  <div id="admin-content" style="display:none">
+    <div class="alert" id="admin-alert"></div>
+
+    <div style="display:grid;grid-template-columns:1fr 280px;gap:18px;align-items:start">
+    <div>
+
+      <!-- ENTRY FORM -->
+      <div class="sec">Daily Stat Entry</div>
+      <div class="card">
+        <div class="card-head"><h2>Enter Stats</h2><span class="pill pill-red">Commissioner Only</span></div>
+        <div class="card-body">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:flex-end">
+            <div style="flex:1;min-width:140px">
+              <div style="font-family:var(--f-ui);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dust);margin-bottom:4px">Date</div>
+              <input type="date" id="adm-date" onchange="loadDay()"/>
+            </div>
+            <div style="flex:1;min-width:160px">
+              <div style="font-family:var(--f-ui);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dust);margin-bottom:4px">Stat Category</div>
+              <select id="adm-stat" onchange="loadDay()">
+                <option value="rbi">RBI (Mar / Apr)</option>
+                <option value="strikeouts">Strikeouts (May)</option>
+                <option value="hits">Hits (June)</option>
+                <option value="stolen_bases">Stolen Bases (July)</option>
+                <option value="home_runs">Home Runs (Aug)</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="background:var(--cream2);border:1px solid rgba(92,61,30,.2);border-left:3px solid var(--amber);padding:9px 12px;margin-bottom:14px;font-size:12px;color:var(--ink2);font-family:var(--f-body);font-style:italic">
+            Enter today's stat total per team. If a date is already saved, the values will pre-fill — edit any team and save to update. The leaderboard always reflects the sum of all saved days.
+          </div>
+
+          <div style="font-family:var(--f-ui);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dust);margin-bottom:8px" id="adm-form-label">Select a date to load teams</div>
+          <div class="adm-grid" id="adm-grid"><div class="loading-state">Select a date above.</div></div>
+
+          <div style="margin-bottom:10px">
+            <div style="font-family:var(--f-ui);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dust);margin-bottom:4px">Note (optional)</div>
+            <input type="text" id="adm-note" placeholder="e.g. Rain delay, stat correction..."/>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="saveDay()">💾 Save This Day</button>
+            <button class="btn" onclick="loadDay()">↺ Reload</button>
+          </div>
+          <div id="adm-status" style="font-size:12px;font-family:var(--f-body);font-style:italic;color:var(--dust);min-height:18px"></div>
+        </div>
+      </div>
+
+      <!-- CURRENT STANDINGS PREVIEW -->
+      <div class="sec">Current Monthly Standings</div>
+      <div class="card">
+        <div class="card-head"><h2 id="adm-lb-title">RBI Standings</h2><span class="pill pill-gold">Live</span></div>
+        <table class="lb-table">
+          <thead><tr><th style="width:38px">#</th><th>Team</th><th class="r">Total</th></tr></thead>
+          <tbody id="adm-lb-body"><tr><td colspan="3" class="empty-row">Save data to see standings</td></tr></tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <!-- CALENDAR SIDEBAR -->
+    <div>
+      <div class="sec">Saved Dates</div>
+      <div class="card">
+        <div class="card-head"><h2>History</h2><span class="pill pill-ink">Calendar</span></div>
+        <div class="card-body">
+          <p style="font-size:12px;font-style:italic;color:var(--dust);font-family:var(--f-body);margin-bottom:12px">Click any saved date to load it into the entry form.</p>
+          <div class="cal-grid" id="cal-grid"><div class="loading-state">Loading...</div></div>
+        </div>
+      </div>
+    </div>
+
+    </div><!-- /grid -->
+  </div><!-- /admin-content -->
+
+</div>
+</div>
+
+</div><!-- /page -->
 
 <footer class="site-footer">
   <p>
     <strong>The Rusty Kuntz Dynasty League</strong> · Est. 2021 · Dynasty Baseball · 14 Teams<br/>
     Named in honor of Russell Jay Kuntz — World Series Champion, Baseball Lifer, Greatest Name in the Game.<br/>
-    <span style="font-size:11px;opacity:.6">Powered by SeanBot 1.0 · Auto-syncs after the last MLB game each night · Stats reflect started players only</span>
+    <span style="opacity:.6">MLB stats powered by MLB.com · Fantrax standings entered daily by commissioner</span>
   </p>
 </footer>
-</div>
 
 <script>
 const API = 'https://seanbot-backend.onrender.com';
+const ADMIN_SECRET = 'RustyKuntz2026!';
+
+const TEAMS = [
+  'Possibilities',"Yoshi\u2019s Islanders",'thebigfur','Red Birds',
+  'Daddy Yankee','\u00a1pinto!','JoanMacias','Xavier','Los Jankees',
+  'Momin8421','ericliaci','Sho Me The Money','Designated Shitters','Arraezed & Hoerny'
+];
+
+const CATS = [
+  {name:'RBI',         stat:'rbi',          period:'March/April', sm:3, em:4, ed:30},
+  {name:'Strikeouts',  stat:'strikeouts',   period:'May',         sm:5, em:5, ed:31},
+  {name:'Hits',        stat:'hits',         period:'June',        sm:6, em:6, ed:30},
+  {name:'Stolen Bases',stat:'stolen_bases', period:'July',        sm:7, em:7, ed:31},
+  {name:'Home Runs',   stat:'home_runs',    period:'August',      sm:8, em:8, ed:31},
+  {name:'Single-Day',  stat:null,           period:'September',   sm:9, em:9, ed:30},
+];
 
 const QUOTES = [
   {t:"It ain't over till it's over.",a:"Yogi Berra"},
   {t:"Baseball is ninety percent mental and the other half is physical.",a:"Yogi Berra"},
   {t:"Every strike brings me closer to the next home run.",a:"Babe Ruth"},
-  {t:"Baseball is the only field of endeavor where a man can succeed three times out of ten and be considered a good performer.",a:"Ted Williams"},
-  {t:"People ask me what I do in winter when there's no baseball. I'll tell you what I do. I stare out the window and wait for spring.",a:"Rogers Hornsby"},
-  {t:"Rusty Kuntz is the best first base coach in baseball.",a:"Ned Yost, Kansas City Royals Manager"},
-  {t:"The name Rusty Kuntz is hands down the best name ever. So many jokes, so little time.",a:"Bleacher Report, 2010"},
+  {t:"People ask me what I do in winter when there's no baseball. I stare out the window and wait for spring.",a:"Rogers Hornsby"},
+  {t:"Rusty Kuntz is the best first base coach in baseball.",a:"Ned Yost"},
+  {t:"The name Rusty Kuntz is hands down the best name ever.",a:"Bleacher Report, 2010"},
   {t:"In baseball, you don't know nothing.",a:"Yogi Berra"},
-  {t:"The key to winning baseball games is pitching, fundamentals, and three run homers.",a:"Earl Weaver"},
-  {t:"Baseball is like church. Many attend, but few understand.",a:"Leo Durocher"},
+  {t:"Baseball is like church. Many attend, few understand.",a:"Leo Durocher"},
+  {t:"He drove in the game-winning run in Game 5 of the World Series. That's all you need to know.",a:"On Rusty Kuntz · 1984"},
   {t:"There are three types of baseball players: those who make it happen, those who watch it happen, and those who wonder what happens.",a:"Tommy Lasorda"},
-  {t:"He drove in the game-winning run in Game 5 of the World Series. That's all you need to know.",a:"On Rusty Kuntz, 1984"},
-  {t:"Little League baseball is a very good thing because it keeps the parents off the streets.",a:"Yogi Berra"},
+  {t:"You can't think and hit at the same time.",a:"Yogi Berra"},
   {t:"The game of baseball is a clean, straight game.",a:"William Howard Taft"},
 ];
 
-const CATS = [
-  {name:'RBI',key:'rbi',period:'March/April',startMonth:3,endMonth:4,endDay:30},
-  {name:'Strikeouts',key:'strikeouts',period:'May',startMonth:5,endMonth:5,endDay:31},
-  {name:'Hits',key:'hits',period:'June',startMonth:6,endMonth:6,endDay:30},
-  {name:'Stolen Bases',key:'stolen_bases',period:'July',startMonth:7,endMonth:7,endDay:31},
-  {name:'Home Runs',key:'home_runs',period:'August',startMonth:8,endMonth:8,endDay:31},
-  {name:'Single-Day',key:null,period:'September',startMonth:9,endMonth:9,endDay:30},
-];
-const STAT_MAP={0:'rbi',1:'k',2:'h',3:'sb',4:'hr'};
-const TEAMS=['Possibilities',"Yoshi's Islanders",'thebigfur','Red Birds','Daddy Yankee','\u00a1pinto!','JoanMacias','Xavier','Los Jankees','Momin8421','ericliaci','Sho Me The Money','Designated Shitters','Arraezed & Hoerny'];
+let catIdx = 0;
+let currentView = 'monthly';
+let standingsData = [];
+let mlbScores = [];
+let mlbNews = [];
+let chirpData = [];
 
-let catIdx=0,sortAsc=false,teamData=[],playerData={rbi:[],k:[],h:[],sb:[],hr:[]},mlbScores=[],mlbNews=[],chirpData=[];
-
-function checkAdmin(){
-  if(window.location.search.includes('admin')){
-    document.getElementById('admin-wrap').classList.add('visible');loadEntryGrid();
-    // Set default date to today
-    document.getElementById('entry-date').value = new Date().toISOString().slice(0,10);
-  }
-}
-
+// ── QUOTES ────────────────────────────────────────────────────────────────────
 function showQuote(){
-  const q=QUOTES[Math.floor(Math.random()*QUOTES.length)];
-  const qb=document.getElementById('q-body');const qa=document.getElementById('q-author');
-  qb.style.opacity='0';
-  setTimeout(()=>{qb.textContent=q.t;qa.textContent='— '+q.a;qb.style.opacity='1';},400);
+  const q = QUOTES[Math.floor(Math.random()*QUOTES.length)];
+  const el = document.getElementById('q-body');
+  el.style.opacity='0';
+  setTimeout(()=>{
+    el.textContent = q.t;
+    document.getElementById('q-author').textContent = '— '+q.a;
+    el.style.opacity='1';
+  },400);
 }
-showQuote();setInterval(showQuote,12000);
+showQuote();
+setInterval(showQuote,14000);
 
+// ── TABS ──────────────────────────────────────────────────────────────────────
+function showTab(id, btn){
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── COUNTDOWN ─────────────────────────────────────────────────────────────────
 function renderCountdown(){
-  const cat=CATS[catIdx];const now=new Date();const m=now.getMonth()+1;
-  const periodStarted=(m>=cat.startMonth);const periodOver=(m>cat.endMonth);
-  let days,lbl,cdLbl;
-  if(!periodStarted){const start=new Date(now.getFullYear(),cat.startMonth-1,1);days=Math.max(0,Math.ceil((start-now)/86400000));lbl=`days until ${cat.period} begins`;cdLbl='Period Begins In';}
-  else if(periodOver){days=0;lbl=`${cat.period} has ended`;cdLbl='Period Status';}
-  else{const end=new Date(now.getFullYear(),cat.endMonth-1,cat.endDay,23,59,59);days=Math.max(0,Math.ceil((end-now)/86400000));lbl=days===0?`Last day of ${cat.period}`:`days left in ${cat.period}`;cdLbl='Period Ends In';}
-  document.getElementById('cd-lbl').textContent=cdLbl;
-  document.getElementById('cd-num').textContent=days;
-  document.getElementById('cd-txt').textContent=lbl;
-  document.getElementById('hero-days').textContent=days;
-  document.getElementById('hero-cd-label').textContent=periodStarted&&!periodOver?`days left · ${cat.period}`:`days until ${cat.period}`;
-  document.getElementById('hero-period-lbl').textContent=cat.period+' prize category';
+  const cat = CATS[catIdx];
+  const now = new Date();
+  const m   = now.getMonth()+1;
+  const started = m >= cat.sm;
+  const over    = m > cat.em;
+  let days, lbl, cdLbl;
+  if(!started){
+    const s = new Date(now.getFullYear(), cat.sm-1, 1);
+    days = Math.max(0, Math.ceil((s-now)/86400000));
+    lbl = `days until ${cat.period}`; cdLbl='Starts In';
+  } else if(over){
+    days=0; lbl=`${cat.period} complete`; cdLbl='Status';
+  } else {
+    const e = new Date(now.getFullYear(), cat.em-1, cat.ed, 23,59,59);
+    days = Math.max(0, Math.ceil((e-now)/86400000));
+    lbl = days===0?`Last day of ${cat.period}`:`days left · ${cat.period}`;
+    cdLbl='Period Ends In';
+  }
+  document.getElementById('cd-num').textContent  = days;
+  document.getElementById('cd-lbl').textContent  = cdLbl;
+  document.getElementById('cd-txt').textContent  = lbl;
+  document.getElementById('sum-period').textContent = cat.period;
+  document.getElementById('hero-days').textContent  = days;
+  document.getElementById('hero-days-lbl').textContent = started&&!over?'Days Left':`Until ${cat.period}`;
 }
 
-async function loadAll(){
-  await Promise.allSettled([loadTeamStats(),loadPlayerLeaders(),loadMLBScores(),loadMLBNews(),loadChirps(),loadStatus()]);
-  renderLB();renderPlayerLeaders();renderTicker();renderNewsList();renderScores();renderDigest();updateHero();
-}
-
-async function loadTeamStats(){
-  try{const r=await fetch(`${API}/api/team-stats`);const j=await r.json();teamData=j.data||[];const u=teamData[0]?.updated_at;if(u)document.getElementById('sum-updated').textContent=u;}
-  catch{teamData=TEAMS.map(n=>({team_name:n,rbi:0,strikeouts:0,hits:0,stolen_bases:0,home_runs:0}));}
-}
-async function loadPlayerLeaders(){
-  try{const rs=await Promise.all(['rbi','k','h','sb','hr'].map(s=>fetch(`${API}/api/player-leaders/${s}?limit=10`).then(r=>r.json())));playerData={rbi:rs[0].data,k:rs[1].data,h:rs[2].data,sb:rs[3].data,hr:rs[4].data};}catch{}
-}
-async function loadMLBScores(){try{const r=await fetch(`${API}/api/mlb-scores`);const j=await r.json();mlbScores=j.data||[];}catch{mlbScores=[];}}
-async function loadMLBNews(){try{const r=await fetch(`${API}/api/mlb-news`);const j=await r.json();mlbNews=j.data||[];}catch{mlbNews=[];}}
-async function loadChirps(){
-  try{const r=await fetch(`${API}/api/chirps`);const j=await r.json();chirpData=j.data||[];renderChirpList();}
-  catch{document.getElementById('chirp-list').innerHTML='<div class="chirp-empty">Could not load chirps.</div>';}
-}
-async function loadStatus(){
-  try{
-    const r=await fetch(`${API}/api/status`);const j=await r.json();
-    const st=j.sync_status||'idle';const el=document.getElementById('sbot-st');
-    el.textContent=st;el.className='sbot-v '+(st==='done'?'ok':st==='syncing'?'wait':'');
-    document.getElementById('sbot-sync').textContent=j.last_sync_time||'Not yet';
-    document.getElementById('sbot-games').textContent=`${j.games_final||0}/${j.games_today||0} Final`;
-  }catch{document.getElementById('sbot-st').textContent='Offline';}
-}
-
-function selectCat(idx,btn){
-  catIdx=idx;
+// ── CAT SELECT ────────────────────────────────────────────────────────────────
+function selectCat(idx, btn){
+  catIdx = idx;
   document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  const cat=CATS[idx];
-  document.getElementById('cat-badge').textContent=cat.name;
-  document.getElementById('sum-cat').textContent=cat.name;
-  document.getElementById('pl-title').textContent='Top Players — '+cat.name;
-  document.getElementById('pl-head').textContent=cat.name;
-  renderLB();renderPlayerLeaders();renderCountdown();updateHero();
+  const cat = CATS[idx];
+  document.getElementById('cat-pill').textContent   = cat.name;
+  document.getElementById('sum-cat').textContent    = cat.name;
+  renderCountdown();
+  if(currentView==='monthly') loadStandings();
+  else loadDailyView();
 }
 
-function updateHero(){
-  const cat=CATS[catIdx];const key=cat.key;
-  if(!key||!teamData.length)return;
-  const sorted=[...teamData].sort((a,b)=>(b[key]||0)-(a[key]||0));
-  const leader=sorted[0];const second=sorted[1];
-  document.getElementById('hero-leader').textContent=leader?.team_name||'—';
-  document.getElementById('hero-leader-cat').textContent=`${cat.name} Race · ${cat.period}`;
-  const gap=leader&&second?Math.round((leader[key]||0)-(second[key]||0)):0;
-  document.getElementById('hero-leader-sub').textContent=gap>0?`+${gap} ahead of 2nd place`:'No data yet';
-  document.getElementById('cd-gap').textContent=gap>0?'+'+gap:'—';
-}
-
-function toggleSort(){sortAsc=!sortAsc;renderLB();}
-function renderLB(){
-  const key=CATS[catIdx].key;
-  let rows=teamData.map(t=>({name:t.team_name,total:Math.round(t[key]||0)}));
-  rows.sort((a,b)=>sortAsc?a.total-b.total:b.total-a.total);
-  const max=Math.max(1,...rows.map(r=>r.total));
-  const leader=sortAsc?rows[rows.length-1]:rows[0];
-  document.getElementById('sum-leader').textContent=leader?.name||'—';
-  document.getElementById('sum-total').textContent=leader?.total||0;
-  const tbody=document.getElementById('lb-body');
-  if(!rows.length||rows.every(r=>r.total===0)){tbody.innerHTML='<tr><td colspan="5" class="loading">SeanBot will populate this after tonight\'s games</td></tr>';return;}
-  tbody.innerHTML='';
-  rows.forEach((r,i)=>{
-    const dr=sortAsc?rows.length-i:i+1;
-    const rc=dr===1?'gold':dr===2?'silver':dr===3?'bronze':'rest';
-    const rl=dr===1?'1st':dr===2?'2nd':dr===3?'3rd':dr+'th';
-    const pct=Math.round((r.total/max)*100);
-    const tr=document.createElement('tr');
-    if(dr===1)tr.className='top-row';
-    tr.innerHTML=`<td><span class="rk ${rc}">${rl}</span></td><td><div class="tnc">${esc(r.name)}</div></td><td class="barc"><div class="mb"><div class="mbf" style="width:${pct}%"></div></div></td><td class="totc">${r.total}</td><td class="deltc">—</td>`;
-    tbody.appendChild(tr);
-  });
-}
-
-function renderPlayerLeaders(){
-  const sk=STAT_MAP[catIdx];const tbody=document.getElementById('pl-body');
-  if(!sk){tbody.innerHTML='<tr><td colspan="3" class="loading">Manual category</td></tr>';return;}
-  const players=playerData[sk]||[];
-  if(!players.length){tbody.innerHTML='<tr><td colspan="3" class="loading">Pending SeanBot sync</td></tr>';return;}
-  tbody.innerHTML='';
-  players.slice(0,10).forEach((p,i)=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td class="pnum">${i+1}</td><td><div class="pnm">${esc(p.name)}</div><div class="pft">${esc(p.fantasy_team||'')}</div><div class="psub">${esc(p.mlb_team||'')}</div></td><td class="pst">${Math.round(p[sk]||0)}</td>`;
-    tbody.appendChild(tr);
-  });
-}
-
-function renderTicker(){
-  const items=[];
-  CATS.forEach(cat=>{
-    if(!cat.key)return;
-    const sorted=[...teamData].sort((a,b)=>(b[cat.key]||0)-(a[cat.key]||0));
-    if(sorted.length&&sorted[0][cat.key]>0)
-      items.push(`<span class="ti">${cat.period} ${cat.name}: <span class="val">${esc(sorted[0].team_name)}</span><span class="dot">·</span><span class="val">${Math.round(sorted[0][cat.key])}</span></span>`);
-  });
-  mlbScores.slice(0,8).forEach(g=>{
-    const st=g.status==='Final'?'F':(g.inning||g.status);
-    items.push(`<span class="ti">${esc(g.away_abbr||g.away_team)} ${g.away_score??'—'}<span class="dot">@</span>${esc(g.home_abbr||g.home_team)} ${g.home_score??'—'} <span class="dot">[${st}]</span></span>`);
-  });
-  if(items.length)document.getElementById('ticker-track').innerHTML=[...items,...items].join('');
-}
-
-function renderScores(){
-  const today=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
-  document.getElementById('scores-head').textContent='MLB — '+today;
-  const grid=document.getElementById('scores-grid');
-  if(!mlbScores.length){grid.innerHTML='<div class="loading">No games today or data unavailable</div>';return;}
-  grid.innerHTML='';
-  mlbScores.forEach(g=>{
-    const sc=g.status==='Live'?'live':g.status==='Final'?'final':'';
-    const sl=g.status==='Live'?`● LIVE · ${g.inning||''}`:(g.status_detail||g.status);
-    const d=document.createElement('div');d.className='sc-card';
-    d.innerHTML=`<div class="sc-st ${sc}">${esc(sl)}</div><div class="sc-row"><span class="sc-tm">${esc(g.away_abbr||g.away_team)}</span><span class="sc-v${g.away_winner?' w':''}">${g.away_score??'—'}</span></div><hr class="sc-div"/><div class="sc-row"><span class="sc-tm">${esc(g.home_abbr||g.home_team)}</span><span class="sc-v${g.home_winner?' w':''}">${g.home_score??'—'}</span></div>`;
-    grid.appendChild(d);
-  });
-}
-
-function renderNewsList(){
-  const el=document.getElementById('news-list');
-  if(!mlbNews.length){el.innerHTML='<div class="loading">No news available</div>';return;}
-  el.innerHTML='';
-  mlbNews.slice(0,8).forEach(n=>{
-    const dt=n.pub_date?new Date(n.pub_date).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'';
-    const d=document.createElement('div');d.className='ni';
-    d.innerHTML=`<div class="ni-dot"></div><div><div class="ni-t"><a href="${esc(n.link)}" target="_blank" rel="noopener">${esc(n.title)}</a></div><div class="ni-d">${dt}</div></div>`;
-    el.appendChild(d);
-  });
-}
-
-function renderDigest(){
-  const defs=[{key:'rbi',l:'RBI King'},{key:'k',l:'Strikeout Machine'},{key:'h',l:'Hit Parade'},{key:'sb',l:'Speed Demon'},{key:'hr',l:'Long Ball'}];
-  const grid=document.getElementById('digest-grid');grid.innerHTML='';
-  defs.forEach(({key,l})=>{
-    const top=(playerData[key]||[])[0];
-    const d=document.createElement('div');d.className='dig-c';
-    d.innerHTML=top?`<div class="dig-l">${l}</div><div class="dig-p">${esc(top.name)}</div><div class="dig-v">${Math.round(top[key]||0)}</div><div class="dig-t">${esc(top.fantasy_team||'')}</div>`:`<div class="dig-l">${l}</div><div class="dig-p" style="color:var(--muted);font-style:italic">Pending sync</div>`;
-    grid.appendChild(d);
-  });
-}
-
-document.getElementById('c-msg').addEventListener('input',function(){document.getElementById('c-count').textContent=280-this.value.length;});
-async function postChirp(){
-  const auth=document.getElementById('c-auth').value.trim();
-  const msg=document.getElementById('c-msg').value.trim();
-  const team=document.getElementById('c-team').value;
-  if(!auth||!msg)return alert('Name and message required.');
-  try{
-    await fetch(`${API}/api/chirps`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({author:auth,team,message:msg})});
-    document.getElementById('c-msg').value='';document.getElementById('c-count').textContent='280';loadChirps();
-  }catch{alert('Could not post — check connection.');}
-}
-function renderChirpList(){
-  const el=document.getElementById('chirp-list');
-  if(!chirpData.length){el.innerHTML='<div class="chirp-empty">No chirps yet. Start the trash talk!</div>';return;}
-  el.innerHTML='';
-  chirpData.forEach(c=>{
-    const ts=new Date(c.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
-    const d=document.createElement('div');d.className='chirp-item';
-    d.innerHTML=`<div class="chirp-hd"><span class="chirp-auth">${esc(c.author)}</span>${c.team?`<span class="chirp-team">${esc(c.team)}</span>`:''}<span class="chirp-time">${ts}</span></div><div class="chirp-msg">${esc(c.message)}</div>`;
-    el.appendChild(d);
-  });
-}
-
-function loadEntryGrid() {
-  const stat = document.getElementById('entry-stat').value;
-  const el   = document.getElementById('entry-grid');
-  el.innerHTML = '';
-  document.getElementById('entry-status').textContent = '';
-  TEAMS.forEach(name => {
-    const row = teamData.find(t => t.team_name === name) || {};
-    const cur = Math.round(row[stat] || 0);
-    const d   = document.createElement('div');
-    d.className = 'adm-item';
-    d.innerHTML = `<span class="an">${esc(name)}</span><span class="ac">total: <strong>${cur}</strong></span><input type="number" min="0" placeholder="add RBIs" data-team="${esc(name)}" style="width:100px"/>`;
-    el.appendChild(d);
-  });
-}
-
-async function saveStats() {
-  const secret = document.getElementById('admin-secret').value;
-  const stat   = document.getElementById('entry-stat').value;
-  if (!secret) return showAdminAlert('Enter admin password.', 'err');
-
-  const entries = [];
-  document.querySelectorAll('#entry-grid input[type=number]').forEach(inp => {
-    if (inp.value === '') return;
-    const val = parseInt(inp.value);
-    if (!isNaN(val) && val >= 0)
-      entries.push({team_name: inp.dataset.team, value: val});
-  });
-  if (!entries.length) return showAdminAlert('No values entered.', 'err');
-
-  try {
-    const r = await fetch(`${API}/api/add-stats`, {
-      method:  'POST',
-      headers: {'Content-Type': 'application/json'},
-      body:    JSON.stringify({secret, stat, entries})
-    });
-    const j = await r.json();
-    if (j.ok) {
-      showAdminAlert(`✓ ${j.updated} teams updated.`, 'ok');
-      document.getElementById('entry-status').textContent = `Added to monthly total — standings updated.`;
-      document.querySelectorAll('#entry-grid input[type=number]').forEach(i => i.value = '');
-      await loadTeamStats(); renderLB(); updateHero(); loadEntryGrid();
-    } else {
-      showAdminAlert('Server error — check password.', 'err');
+// ── VIEW TOGGLE ───────────────────────────────────────────────────────────────
+function setView(v, btn){
+  currentView = v;
+  document.querySelectorAll('.view-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const picker = document.getElementById('daily-date-pick');
+  if(v==='daily'){
+    picker.style.display='flex';
+    if(!document.getElementById('daily-date').value){
+      document.getElementById('daily-date').value = new Date().toISOString().slice(0,10);
     }
-  } catch(e) {
-    showAdminAlert('Could not reach server.', 'err');
+    loadDailyView();
+  } else {
+    picker.style.display='none';
+    loadStandings();
   }
 }
 
-async function saveSeptScore(){
-  const secret=document.getElementById('admin-secret').value;
-  const team=document.getElementById('sept-team').value;
-  const score=parseInt(document.getElementById('sept-score').value);
-  if(!secret)return showAdminAlert('Enter admin password.','err');
-  if(!team||isNaN(score))return showAdminAlert('Select team and enter score.','err');
-  showAdminAlert(`Saved: ${team} — ${score} pts`,'ok');
+// ── DATA ──────────────────────────────────────────────────────────────────────
+async function loadAll(){
+  await Promise.allSettled([
+    loadStandings(),
+    loadMLBScores(),
+    loadMLBNews(),
+    loadChirps(),
+    loadStatus(),
+  ]);
+  loadLeaders('homeRuns','Home Runs', document.querySelector('#leaders-mini-tabs .ltab'), 'mini');
 }
 
-function showAdminAlert(msg,type){
+async function loadStandings(){
+  const cat = CATS[catIdx];
+  if(!cat.stat){ standingsData=[]; renderLB([]); return; }
+  const month = new Date().toISOString().slice(0,7);
+  try{
+    const r = await fetch(`${API}/api/standings?stat=${cat.stat}&month=${month}`);
+    const j = await r.json();
+    standingsData = j.data || [];
+  } catch { standingsData=[]; }
+  renderLB(standingsData);
+}
+
+async function loadDailyView(){
+  const cat  = CATS[catIdx];
+  const d    = document.getElementById('daily-date').value;
+  if(!cat.stat||!d){ renderLB([]); return; }
+  try{
+    const r = await fetch(`${API}/api/daily?stat=${cat.stat}&score_date=${d}`);
+    const j = await r.json();
+    renderLB(j.data||[]);
+  } catch { renderLB([]); }
+}
+
+async function loadMLBScores(){
+  try{
+    const r = await fetch(`${API}/api/mlb-scores`);
+    const j = await r.json();
+    mlbScores = j.data||[];
+  } catch { mlbScores=[]; }
+  renderScores();
+}
+
+async function loadMLBNews(){
+  try{
+    const r = await fetch(`${API}/api/mlb-news`);
+    const j = await r.json();
+    mlbNews = j.data||[];
+  } catch { mlbNews=[]; }
+  renderNews();
+}
+
+async function loadChirps(){
+  try{
+    const r = await fetch(`${API}/api/chirps`);
+    const j = await r.json();
+    chirpData = j.data||[];
+    renderChirps();
+  } catch {}
+}
+
+async function loadStatus(){
+  try{
+    const r = await fetch(`${API}/api/status`);
+    const j = await r.json();
+    const live  = j.games_live||0;
+    const final = j.games_final||0;
+    const total = j.games_today||0;
+    document.getElementById('hero-games').textContent = total||'—';
+    document.getElementById('scores-mini-pill').textContent = live>0?`● ${live} Live`:(final>0?`${final} Final`:'Today');
+    document.getElementById('scores-pill').textContent      = live>0?`● ${live} Live`:(final>0?`${final} Final`:'Today');
+  } catch {}
+}
+
+// ── RENDER LEADERBOARD ────────────────────────────────────────────────────────
+function renderLB(rows){
+  const tbody = document.getElementById('lb-body');
+  const cat   = CATS[catIdx];
+
+  if(!cat.stat){
+    tbody.innerHTML='<tr><td colspan="5" class="empty-row">September prize — manually tracked each day</td></tr>';
+    updateHero([]);return;
+  }
+  if(!rows||!rows.length||rows.every(r=>r.total===0)){
+    tbody.innerHTML='<tr><td colspan="5" class="empty-row">No data yet for this period</td></tr>';
+    updateHero([]);return;
+  }
+
+  const max = Math.max(1,...rows.map(r=>r.total));
+  const top = rows[0];
+  const sec = rows[1];
+
+  document.getElementById('sum-leader').textContent = top?.team_name||'—';
+  document.getElementById('sum-total').textContent  = top?.total||0;
+  document.getElementById('cd-gap').textContent     = (top&&sec)?(top.total-sec.total)||'0':'—';
+
+  tbody.innerHTML='';
+  rows.forEach((r,i)=>{
+    const rank = i+1;
+    const rc   = rank===1?'r1':rank===2?'r2':rank===3?'r3':'rx';
+    const rl   = rank===1?'1st':rank===2?'2nd':rank===3?'3rd':rank+'th';
+    const pct  = Math.round((r.total/max)*100);
+    const gap  = rows[0].total - r.total;
+    const tr   = document.createElement('tr');
+    if(rank===1) tr.className='first';
+    tr.innerHTML=`<td><span class="rank ${rc}">${rl}</span></td><td><div class="team-name">${esc(r.team_name)}</div></td><td class="bar-cell"><div class="bar-bg"><div class="bar-fill" style="width:${pct}%"></div></div></td><td class="total-cell">${r.total}</td><td class="gap-cell">${gap===0?'—':'+'+gap}</td>`;
+    tbody.appendChild(tr);
+  });
+
+  updateHero(rows);
+}
+
+function updateHero(rows){
+  const cat = CATS[catIdx];
+  if(!rows||!rows.length||rows.every(r=>r.total===0)){
+    document.getElementById('hero-leader-val').textContent='—';
+    document.getElementById('hero-leader-total').textContent='0';
+    document.getElementById('hero-leader-lbl').textContent=cat.name+' Leader';
+    return;
+  }
+  const top = rows[0];
+  document.getElementById('hero-leader-val').textContent   = top.team_name;
+  document.getElementById('hero-leader-total').textContent = top.total;
+  document.getElementById('hero-leader-lbl').textContent   = cat.name+' Leader';
+}
+
+// ── SCORES ────────────────────────────────────────────────────────────────────
+function renderScores(){
+  const today = new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+  document.getElementById('scores-head').textContent = 'MLB — '+today;
+  document.getElementById('scores-mini-head').textContent = 'Games — '+today;
+
+  function buildGrid(targetId){
+    const el = document.getElementById(targetId);
+    if(!mlbScores.length){ el.innerHTML='<div class="loading-state">No games today</div>'; return; }
+    el.innerHTML='';
+    mlbScores.forEach(g=>{
+      const sc = g.status==='Live'?'live':g.status==='Final'?'final':'';
+      const sl = g.status==='Live'?`● ${g.inning||'Live'}`:(g.status_detail||g.status);
+      const d  = document.createElement('div');
+      d.className='score-card';
+      d.innerHTML=`<div class="score-status ${sc}">${esc(sl)}</div><div class="score-row"><span class="score-team">${esc(g.away_abbr||g.away_team)}</span><span class="score-val${g.away_winner?' win':''}">${g.away_score??'—'}</span></div><hr class="score-div"/><div class="score-row"><span class="score-team">${esc(g.home_abbr||g.home_team)}</span><span class="score-val${g.home_winner?' win':''}">${g.home_score??'—'}</span></div>`;
+      el.appendChild(d);
+    });
+  }
+  buildGrid('scores-grid');
+  buildGrid('scores-mini-grid');
+  renderTicker();
+}
+
+// ── MLB LEADERS ───────────────────────────────────────────────────────────────
+async function loadLeaders(stat, label, btn, target){
+  // Update active tab
+  const tabs = btn.closest('.leader-tabs,.pl-tabs');
+  if(tabs) tabs.querySelectorAll('.ltab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+
+  if(target==='main'){
+    document.getElementById('leaders-title').textContent = label+' Leaders';
+    document.getElementById('leaders-stat-head').textContent = label;
+  } else {
+    document.getElementById('leaders-mini-title').textContent = label+' Leaders';
+  }
+
+  const bodyId = target==='main'?'leaders-body':'leaders-mini-body';
+  document.getElementById(bodyId).innerHTML='<tr><td colspan="3" class="loading-state">Loading...</td></tr>';
+
+  try{
+    const r = await fetch(`${API}/api/mlb-leaders?stat=${stat}&limit=10`);
+    const j = await r.json();
+    const leaders = j.data||[];
+    if(!leaders.length){
+      document.getElementById(bodyId).innerHTML='<tr><td colspan="3" class="loading-state">No data available</td></tr>';
+      return;
+    }
+    let html='';
+    leaders.forEach(p=>{
+      html+=`<tr><td class="l-rank">${p.rank}</td><td><div class="l-name">${esc(p.name)}</div><div class="l-team">${esc(p.team)}</div></td><td class="l-val">${p.value}</td></tr>`;
+    });
+    document.getElementById(bodyId).innerHTML=html;
+  } catch {
+    document.getElementById(bodyId).innerHTML='<tr><td colspan="3" class="loading-state">Could not load</td></tr>';
+  }
+}
+
+// ── NEWS ──────────────────────────────────────────────────────────────────────
+function renderNews(){
+  const el = document.getElementById('news-list');
+  if(!mlbNews.length){ el.innerHTML='<div class="loading-state">No news available</div>'; return; }
+  el.innerHTML='';
+  mlbNews.slice(0,12).forEach(n=>{
+    const dt = n.pub_date?new Date(n.pub_date).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'';
+    const d  = document.createElement('div');
+    d.className='news-item';
+    d.innerHTML=`<div class="news-dot"></div><div><div class="news-title"><a href="${esc(n.link)}" target="_blank" rel="noopener">${esc(n.title)}</a></div><div class="news-date">${dt}</div></div>`;
+    el.appendChild(d);
+  });
+}
+
+// ── CHIRPS ────────────────────────────────────────────────────────────────────
+document.getElementById('c-msg').addEventListener('input',function(){
+  document.getElementById('c-count').textContent = 280-this.value.length;
+});
+
+async function postChirp(){
+  const auth = document.getElementById('c-auth').value.trim();
+  const msg  = document.getElementById('c-msg').value.trim();
+  const team = document.getElementById('c-team').value;
+  if(!auth||!msg) return alert('Name and message required.');
+  try{
+    await fetch(`${API}/api/chirps`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({author:auth,team,message:msg})});
+    document.getElementById('c-msg').value='';
+    document.getElementById('c-count').textContent='280';
+    loadChirps();
+  } catch { alert('Could not post.'); }
+}
+
+function renderChirps(){
+  const el = document.getElementById('chirp-list');
+  if(!chirpData.length){ el.innerHTML='<div class="chirp-empty">No chirps yet. Start the trash talk!</div>'; return; }
+  el.innerHTML='';
+  chirpData.forEach(c=>{
+    const ts = new Date(c.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+    const d  = document.createElement('div');
+    d.className='chirp-item';
+    d.innerHTML=`<div class="chirp-meta"><span class="chirp-author">${esc(c.author)}</span>${c.team?`<span class="chirp-team">${esc(c.team)}</span>`:''}<span class="chirp-time">${ts}</span></div><div class="chirp-msg">${esc(c.message)}</div>`;
+    el.appendChild(d);
+  });
+}
+
+// ── TICKER ────────────────────────────────────────────────────────────────────
+function renderTicker(){
+  const items=[];
+  if(standingsData.length&&standingsData[0].total>0){
+    const cat=CATS[catIdx];
+    items.push(`<span class="tick">${cat.period} ${cat.name} Leader: <b>${esc(standingsData[0].team_name)}</b><span class="sep">·</span><b>${standingsData[0].total}</b></span>`);
+  }
+  mlbScores.slice(0,8).forEach(g=>{
+    const st=g.status==='Final'?'F':(g.inning||g.status_detail||g.status);
+    items.push(`<span class="tick">${esc(g.away_abbr||g.away_team)} ${g.away_score??'—'}<span class="sep">@</span>${esc(g.home_abbr||g.home_team)} ${g.home_score??'—'} <span class="sep">[${esc(st)}]</span></span>`);
+  });
+  if(items.length){
+    document.getElementById('ticker-track').innerHTML=[...items,...items].join('');
+  }
+}
+
+// ── ADMIN: LOCK ───────────────────────────────────────────────────────────────
+function unlockAdmin(){
+  const pw = document.getElementById('admin-pw').value;
+  if(pw === ADMIN_SECRET){
+    document.getElementById('admin-lock').style.display    = 'none';
+    document.getElementById('admin-content').style.display = 'block';
+    // Set default date to today
+    document.getElementById('adm-date').value = new Date().toISOString().slice(0,10);
+    loadDay();
+    loadCalendar();
+    loadAdminStandings();
+  } else {
+    document.getElementById('lock-err').style.display = 'block';
+  }
+}
+
+// ── ADMIN: LOAD DAY ───────────────────────────────────────────────────────────
+async function loadDay(){
+  const d    = document.getElementById('adm-date').value;
+  const stat = document.getElementById('adm-stat').value;
+  const el   = document.getElementById('adm-grid');
+  const lbl  = document.getElementById('adm-form-label');
+
+  if(!d){ el.innerHTML='<div class="loading-state">Select a date above.</div>'; return; }
+
+  lbl.textContent = `${d} — ${stat.replace('_',' ').toUpperCase()} — Loading...`;
+  el.innerHTML    = '<div class="loading-state">Loading...</div>';
+  document.getElementById('adm-status').textContent = '';
+
+  let existing = {};
+  try{
+    const r = await fetch(`${API}/api/daily-entries?score_date=${d}&stat=${stat}`);
+    const j = await r.json();
+    (j.data||[]).forEach(row=>{ existing[row.team_name]=row.value; });
+  } catch {}
+
+  const savedCount = Object.keys(existing).length;
+  lbl.textContent = `${d} · ${stat.replace(/_/g,' ').toUpperCase()}${savedCount>0?` · ${savedCount} teams already saved`:''}`;
+
+  el.innerHTML='';
+  TEAMS.forEach(name=>{
+    const saved = existing[name]!==undefined;
+    const cur   = saved?existing[name]:'';
+    const d2    = document.createElement('div');
+    d2.className='adm-item';
+    d2.innerHTML=`<span class="adm-name">${esc(name)}</span><span class="adm-saved ${saved?'has':'none'}">${saved?'✓ '+cur:'—'}</span><input type="number" min="0" placeholder="0" data-team="${esc(name)}" value="${saved?cur:''}"/>`;
+    el.appendChild(d2);
+  });
+}
+
+// ── ADMIN: SAVE DAY ───────────────────────────────────────────────────────────
+async function saveDay(){
+  const d    = document.getElementById('adm-date').value;
+  const stat = document.getElementById('adm-stat').value;
+  const note = document.getElementById('adm-note').value.trim();
+
+  if(!d) return showAlert('Select a date.','err');
+
+  const inputs  = document.querySelectorAll('#adm-grid input[type=number]');
+  const entries = [];
+  inputs.forEach(inp=>{
+    if(inp.value==='') return;
+    const val=parseInt(inp.value);
+    if(!isNaN(val)&&val>=0) entries.push({team_name:inp.dataset.team,value:val});
+  });
+  if(!entries.length) return showAlert('No values entered.','err');
+
+  try{
+    const r = await fetch(`${API}/api/save-day`,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({secret:ADMIN_SECRET,score_date:d,stat,note,entries})
+    });
+    const j = await r.json();
+    if(j.ok){
+      showAlert(`✓ Saved ${j.saved} teams for ${d}. Standings updated.`,'ok');
+      document.getElementById('adm-status').textContent=`${j.saved} entries saved.`;
+      // Refresh
+      standingsData = j.standings||[];
+      renderLB(standingsData);
+      updateHero(standingsData);
+      renderTicker();
+      loadDay();
+      loadCalendar();
+      loadAdminStandings(j.standings);
+    } else {
+      showAlert('Error — check and try again.','err');
+    }
+  } catch { showAlert('Could not reach server.','err'); }
+}
+
+// ── ADMIN: MINI STANDINGS ─────────────────────────────────────────────────────
+async function loadAdminStandings(preloaded){
+  const stat  = document.getElementById('adm-stat').value;
+  const month = new Date().toISOString().slice(0,7);
+  document.getElementById('adm-lb-title').textContent = stat.replace(/_/g,' ').toUpperCase()+' Standings';
+  let rows = preloaded;
+  if(!rows){
+    try{
+      const r = await fetch(`${API}/api/standings?stat=${stat}&month=${month}`);
+      const j = await r.json();
+      rows = j.data||[];
+    } catch { rows=[]; }
+  }
+  const tbody = document.getElementById('adm-lb-body');
+  if(!rows.length||rows.every(r=>r.total===0)){
+    tbody.innerHTML='<tr><td colspan="3" class="empty-row">No data yet</td></tr>'; return;
+  }
+  let html='';
+  rows.forEach((r,i)=>{
+    html+=`<tr><td><span class="rank ${i===0?'r1':i===1?'r2':i===2?'r3':'rx'}">${i+1}</span></td><td><div class="team-name">${esc(r.team_name)}</div></td><td class="total-cell">${r.total}</td></tr>`;
+  });
+  tbody.innerHTML=html;
+}
+
+// ── ADMIN: CALENDAR ───────────────────────────────────────────────────────────
+async function loadCalendar(){
+  const stat = document.getElementById('adm-stat').value;
+  const el   = document.getElementById('cal-grid');
+  try{
+    const r = await fetch(`${API}/api/saved-dates?stat=${stat}`);
+    const j = await r.json();
+    const savedDates = new Set(j.dates||[]);
+    el.innerHTML='';
+
+    // Show last 30 days + next 3 days
+    const today = new Date();
+    const dates = [];
+    for(let i=-3;i<=30;i++){
+      const d = new Date(today);
+      d.setDate(today.getDate()-i);
+      dates.push(d);
+    }
+    dates.forEach(d=>{
+      const iso   = d.toISOString().slice(0,10);
+      const day   = d.getDate();
+      const mon   = d.toLocaleDateString('en-US',{month:'short'});
+      const isSaved = savedDates.has(iso);
+      const isSelected = document.getElementById('adm-date').value === iso;
+      const btn   = document.createElement('div');
+      btn.className=`cal-date${isSaved?' saved':''}${isSelected?' selected':''}`;
+      btn.innerHTML=`<div class="cd-d">${day}</div><div class="cd-m">${mon}${isSaved?' ✓':''}</div>`;
+      btn.onclick=()=>{ document.getElementById('adm-date').value=iso; loadDay(); loadCalendar(); loadAdminStandings(); };
+      el.appendChild(btn);
+    });
+  } catch { el.innerHTML='<div class="loading-state">Could not load calendar</div>'; }
+}
+
+document.getElementById('adm-stat').addEventListener('change',()=>{
+  loadDay(); loadCalendar(); loadAdminStandings();
+});
+
+// ── ALERT ─────────────────────────────────────────────────────────────────────
+function showAlert(msg,type){
   const el=document.getElementById('admin-alert');
-  el.textContent=msg;el.className='alert-box '+type;el.style.display='block';
-  clearTimeout(window._aat);window._aat=setTimeout(()=>el.style.display='none',4000);
+  el.textContent=msg;el.className='alert '+type;el.style.display='block';
+  clearTimeout(window._at);
+  window._at=setTimeout(()=>el.style.display='none',5000);
 }
 
+// ── ESC ───────────────────────────────────────────────────────────────────────
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 
-checkAdmin();renderCountdown();loadAll();
-setInterval(()=>{loadMLBScores();renderScores();renderTicker();},5*60*1000);
-setInterval(()=>{loadTeamStats();renderLB();updateHero();},10*60*1000);
-setInterval(()=>{loadStatus();},3*60*1000);
-setInterval(showQuote,12000);
+// ── INIT ──────────────────────────────────────────────────────────────────────
+renderCountdown();
+loadAll();
+
+// Show admin tab link — anyone who knows the URL can navigate to it
+// but it's protected by password on the tab itself
+document.getElementById('admin-tab').style.display='';
+
+// Refresh intervals
+setInterval(()=>{ loadMLBScores(); },       5 * 60 * 1000);
+setInterval(()=>{ loadStandings(); },      10 * 60 * 1000);
+setInterval(()=>{ loadMLBNews(); },        15 * 60 * 1000);
+setInterval(()=>{ loadStatus(); },          3 * 60 * 1000);
+setInterval(showQuote, 14000);
 </script>
 </body>
 </html>
