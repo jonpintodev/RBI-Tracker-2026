@@ -381,19 +381,16 @@ textarea{resize:vertical;min-height:65px}
       <div class="card-head"><h2>🤖 SeanBot Admin</h2><span class="pill pr">Commissioner Only</span></div>
       <div class="card-body">
         <div class="alert-box" id="admin-alert"></div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
-          <input type="password" id="admin-secret" placeholder="Admin password..." style="width:200px"/>
-        </div>
 
-        <div style="font-family:var(--fo);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Update 2026 Standings</div>
-        <div style="background:var(--parch2);border:1px solid var(--border);border-left:3px solid var(--gold);padding:9px 12px;margin-bottom:12px;font-size:11px;color:var(--ink2);font-family:var(--fb);font-style:italic">
-          Enter each team's RBI total for the day. Each save <strong>adds</strong> to the running monthly total — nothing is overwritten.
-        </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;align-items:flex-end">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;align-items:flex-end">
+          <div>
+            <div style="font-family:var(--fo);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Password</div>
+            <input type="password" id="admin-secret" placeholder="Admin password..." style="width:180px"/>
+          </div>
           <div>
             <div style="font-family:var(--fo);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Category</div>
-            <select id="entry-stat" style="width:200px">
-              <option value="rbi">RBI (Mar/Apr)</option>
+            <select id="entry-stat" style="width:200px" onchange="loadEntryGrid()">
+              <option value="rbi">RBI (Mar / Apr)</option>
               <option value="strikeouts">Strikeouts (May)</option>
               <option value="hits">Hits (June)</option>
               <option value="stolen_bases">Stolen Bases (July)</option>
@@ -401,21 +398,26 @@ textarea{resize:vertical;min-height:65px}
             </select>
           </div>
         </div>
-        <div class="adm-grid" id="entry-grid"></div>
-        <div class="btn-row">
-          <button class="btn btn-r" onclick="saveStandings()">💾 Add to Monthly Total</button>
-          <button class="btn" onclick="loadEntryGrid()" style="background:var(--green);color:var(--parch);border-color:var(--green2)">Refresh</button>
-        </div>
-        <div id="entry-status" style="font-size:12px;font-family:var(--fb);font-style:italic;color:var(--muted)"></div>
 
-        <div style="font-family:var(--fo);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px;border-top:1px solid var(--border2);padding-top:14px">September Single-Day Score</div>
+        <div style="background:var(--parch2);border:1px solid var(--border);border-left:3px solid var(--gold);padding:8px 12px;margin-bottom:12px;font-size:11px;color:var(--ink2);font-family:var(--fb);font-style:italic">
+          Enter each team's RBI total for the day — leave blank to skip. Each save <strong>adds</strong> to the running monthly total.
+        </div>
+
+        <div class="adm-grid" id="entry-grid"></div>
+
+        <div class="btn-row">
+          <button class="btn btn-r" onclick="saveStats()">💾 Add to Monthly Total</button>
+        </div>
+        <div id="entry-status" style="font-size:11px;font-family:var(--fb);font-style:italic;color:var(--muted);min-height:18px"></div>
+
+        <div style="font-family:var(--fo);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 8px;border-top:1px solid var(--border2);padding-top:14px">September Single-Day Score</div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px">
           <select id="sept-team" style="width:220px">
             <option value="">Select team...</option>
-            <option>Possibilities</option><option>Yoshi's Islanders</option><option>thebigfur</option>
+            <option>Possibilities</option><option>Yoshi’s Islanders</option><option>thebigfur</option>
             <option>Red Birds</option><option>Daddy Yankee</option><option>¡pinto!</option>
             <option>JoanMacias</option><option>Xavier</option><option>Los Jankees</option>
-            <option>Momin8241</option><option>ericliaci</option><option>Sho Me The Money</option>
+            <option>Momin8421</option><option>ericliaci</option><option>Sho Me The Money</option>
             <option>Designated Shitters</option><option>Arraezed &amp; Hoerny</option>
           </select>
           <input type="number" id="sept-score" placeholder="Score" style="width:100px"/>
@@ -423,8 +425,6 @@ textarea{resize:vertical;min-height:65px}
         </div>
         <p style="font-size:11px;font-style:italic;color:var(--muted);font-family:var(--fb)">Only stat logged manually — enter the highest single-day fantasy score each day in September.</p>
       </div>
-    </div>
-  </div>
 </div>
 
 <footer class="site-footer">
@@ -471,7 +471,7 @@ let catIdx=0,sortAsc=false,teamData=[],playerData={rbi:[],k:[],h:[],sb:[],hr:[]}
 
 function checkAdmin(){
   if(window.location.search.includes('admin')){
-    document.getElementById('admin-wrap').classList.add('visible'); loadEntryGrid();
+    document.getElementById('admin-wrap').classList.add('visible');loadEntryGrid();
     // Set default date to today
     document.getElementById('entry-date').value = new Date().toISOString().slice(0,10);
   }
@@ -665,70 +665,64 @@ function renderChirpList(){
   });
 }
 
-// ── STANDINGS ENTRY ───────────────────────────────────────────────────────────
 function loadEntryGrid() {
   const stat = document.getElementById('entry-stat').value;
-  const el = document.getElementById('entry-grid');
+  const el   = document.getElementById('entry-grid');
   el.innerHTML = '';
+  document.getElementById('entry-status').textContent = '';
   TEAMS.forEach(name => {
-    const td  = teamData.find(t => t.team_name === name) || {};
-    const cur = Math.round(td[stat] || 0);
-    const d = document.createElement('div');
+    const row = teamData.find(t => t.team_name === name) || {};
+    const cur = Math.round(row[stat] || 0);
+    const d   = document.createElement('div');
     d.className = 'adm-item';
-    d.innerHTML = `<span class="an">${esc(name)}</span><span class="ac">current: <strong>${cur}</strong></span><input type="number" min="0" placeholder="today's RBI" data-team="${esc(name)}" style="width:100px"/>`;
+    d.innerHTML = `<span class="an">${esc(name)}</span><span class="ac">total: <strong>${cur}</strong></span><input type="number" min="0" placeholder="add RBIs" data-team="${esc(name)}" style="width:100px"/>`;
     el.appendChild(d);
   });
 }
 
-async function saveStandings() {
+async function saveStats() {
   const secret = document.getElementById('admin-secret').value;
   const stat   = document.getElementById('entry-stat').value;
   if (!secret) return showAdminAlert('Enter admin password.', 'err');
 
-  const inputs = document.querySelectorAll('#entry-grid input[type=number]');
   const entries = [];
-  for (const inp of inputs) {
-    if (inp.value === '') continue;
+  document.querySelectorAll('#entry-grid input[type=number]').forEach(inp => {
+    if (inp.value === '') return;
     const val = parseInt(inp.value);
-    if (isNaN(val) || val < 0) continue;
-    entries.push({team_name: inp.dataset.team, stat, value: val});
-  }
+    if (!isNaN(val) && val >= 0)
+      entries.push({team_name: inp.dataset.team, value: val});
+  });
   if (!entries.length) return showAdminAlert('No values entered.', 'err');
 
   try {
-    const r = await fetch(`${API}/api/update-standings`, {
-      method: 'POST',
+    const r = await fetch(`${API}/api/add-stats`, {
+      method:  'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({secret, entries, override: false})
+      body:    JSON.stringify({secret, stat, entries})
     });
     const j = await r.json();
     if (j.ok) {
-      showAdminAlert(`✓ Updated ${j.updated} teams. Totals accumulated.`, 'ok');
-      document.getElementById('entry-status').textContent = `Saved ${entries.length} entries — added to monthly total.`;
-      // Clear inputs
-      inputs.forEach(inp => inp.value = '');
+      showAdminAlert(`✓ ${j.updated} teams updated.`, 'ok');
+      document.getElementById('entry-status').textContent = `Added to monthly total — standings updated.`;
+      document.querySelectorAll('#entry-grid input[type=number]').forEach(i => i.value = '');
       await loadTeamStats(); renderLB(); updateHero(); loadEntryGrid();
     } else {
-      showAdminAlert('Error saving.', 'err');
+      showAdminAlert('Server error — check password.', 'err');
     }
-  } catch { showAdminAlert('Could not reach server.', 'err'); }
+  } catch(e) {
+    showAdminAlert('Could not reach server.', 'err');
+  }
 }
 
-async function triggerSync(){
-  const secret=document.getElementById('admin-secret').value;
-  if(!secret)return showAdminAlert('Enter admin password.','err');
-  try{const r=await fetch(`${API}/api/sync-now`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({secret})});const j=await r.json();showAdminAlert('✓ '+j.message,'ok');setTimeout(loadStatus,3000);}
-  catch{showAdminAlert('Could not reach SeanBot.','err');}
-}
 async function saveSeptScore(){
   const secret=document.getElementById('admin-secret').value;
   const team=document.getElementById('sept-team').value;
   const score=parseInt(document.getElementById('sept-score').value);
   if(!secret)return showAdminAlert('Enter admin password.','err');
   if(!team||isNaN(score))return showAdminAlert('Select team and enter score.','err');
-  try{await fetch(`${API}/api/sync-now`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({secret,team_override:{team,stat:'single_day',value:score}})});showAdminAlert(`Saved: ${team} — ${score} pts`,'ok');}
-  catch{showAdminAlert('Error saving.','err');}
+  showAdminAlert(`Saved: ${team} — ${score} pts`,'ok');
 }
+
 function showAdminAlert(msg,type){
   const el=document.getElementById('admin-alert');
   el.textContent=msg;el.className='alert-box '+type;el.style.display='block';
