@@ -667,6 +667,7 @@ const QUOTES = [
 
 let catIdx = 0, viewMode = 'monthly', standingsData = [];
 let mlbScores = [], chirps = [];
+let prevStandings = [];
 
 // ── QUOTES ────────────────────────────────────────────────────────────────────
 function showQuote(){
@@ -715,6 +716,7 @@ function selCat(idx,btn){
   document.getElementById('cat-badge').textContent=cat.name;
   document.getElementById('sm-period').textContent=cat.period;
   renderCountdown();
+  prevStandings=[];
   if(viewMode==='monthly') loadStandings();
   else loadDayLB();
 }
@@ -736,7 +738,7 @@ function setView(v,btn){
 async function loadStandings(){
   const cat=CATS[catIdx];
   if(!cat.stat){standingsData=[];renderLB([]);return;}
-  const month=new Date().toLocaleDateString('en-CA',{timeZone:'America/New_York'}).slice(0,7);
+  const month=new Date().toISOString().slice(0,7);
   try{const r=await fetch(`${API}/api/standings?stat=${cat.stat}&month=${month}`);const j=await r.json();standingsData=j.data||[];}
   catch{standingsData=[];}
   renderLB(standingsData);
@@ -755,19 +757,48 @@ function renderLB(rows){
   if(!cat.stat){tbody.innerHTML='<tr><td colspan="5" class="empty">September — single-day high score, manually tracked</td></tr>';updateHero([]);return;}
   if(!rows||rows.every(r=>r.total===0)){tbody.innerHTML='<tr><td colspan="5" class="empty">No data yet — commissioner enters stats nightly</td></tr>';updateHero([]);return;}
   const max=Math.max(1,...rows.map(r=>r.total));
+  const min=Math.min(...rows.map(r=>r.total));
   document.getElementById('sm-leader').textContent=rows[0].team_name;
   document.getElementById('sm-total').textContent=rows[0].total;
+
+  // Color bar: normalize each team's total between min and max
+  function barColor(total){
+    if(max===min) return '#6b7280';
+    const n=(total-min)/(max-min);
+    if(n>=0.80) return '#22c55e';
+    if(n>=0.60) return '#eab308';
+    if(n>=0.40) return '#f97316';
+    if(n>=0.20) return '#f59e0b';
+    return '#e11d48';
+  }
+
+  // Movement arrows: compare to previous snapshot
+  const prevRank={};
+  prevStandings.forEach((r,i)=>{ prevRank[r.team_name]=i+1; });
+
   tbody.innerHTML='';
   rows.forEach((r,i)=>{
     const rank=i+1,rc=rank===1?'rk1':rank===2?'rk2':rank===3?'rk3':'rkx';
     const rl=rank===1?'1st':rank===2?'2nd':rank===3?'3rd':rank+'th';
     const pct=Math.round((r.total/max)*100);
+    const color=barColor(r.total);
     const gap=rows[0].total-r.total;
+    let arrow='';
+    if(prevRank[r.team_name]!==undefined){
+      const diff=prevRank[r.team_name]-rank;
+      if(diff>0)      arrow=`<span style="font-family:var(--f-ui);font-size:11px;font-weight:700;color:#22c55e;margin-left:5px">&#8593;${diff}</span>`;
+      else if(diff<0) arrow=`<span style="font-family:var(--f-ui);font-size:11px;font-weight:700;color:#e11d48;margin-left:5px">&#8595;${Math.abs(diff)}</span>`;
+      else            arrow=`<span style="font-family:var(--f-ui);font-size:11px;color:#6b7280;margin-left:5px">&#8212;</span>`;
+    }
     const tr=document.createElement('tr');
     if(rank===1)tr.className='first';
-    tr.innerHTML=`<td><span class="rk ${rc}">${rl}</span></td><td><span class="tn">${esc(r.team_name)}</span></td><td class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:${pct}%"></div></div></td><td class="tot${rank===1?' big':''}">${r.total}</td><td class="gap${gap>0?' behind':''}">${gap===0?'—':'+'+gap}</td>`;
+    tr.innerHTML=`<td><span class="rk ${rc}">${rl}</span></td><td><span class="tn">${esc(r.team_name)}</span>${arrow}</td><td class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:${pct}%;background:${color}"></div></div></td><td class="tot${rank===1?' big':''}">${r.total}</td><td class="gap${gap>0?' behind':''}">${gap===0?'&#8212;':'+'+gap}</td>`;
     tbody.appendChild(tr);
   });
+
+  // Save snapshot for next render
+  prevStandings=rows.map(r=>({team_name:r.team_name,total:r.total}));
+
   updateHero(rows);
 }
 
@@ -967,7 +998,7 @@ async function saveDay(){
 
 async function loadAdmStandings(preloaded){
   const stat=document.getElementById('adm-stat').value;
-  const month=new Date().toLocaleDateString('en-CA',{timeZone:'America/New_York'}).slice(0,7);
+  const month=new Date().toISOString().slice(0,7);
   document.getElementById('adm-lb-title').textContent=stat.replace(/_/g,' ').toUpperCase()+' Standings';
   let rows=preloaded;
   if(!rows){try{const r=await fetch(`${API}/api/standings?stat=${stat}&month=${month}`);const j=await r.json();rows=j.data||[];}catch{rows=[];}}
